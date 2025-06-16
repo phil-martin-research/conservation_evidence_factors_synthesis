@@ -1,0 +1,185 @@
+TY  - BOOK
+U1  - ITT2616568
+T1  - 
+A1  - 
+Y1  - 2003
+VL  - 
+KW  - EPPI-REVIEWER
+SP  - 
+JF  - 
+U2  - 
+T2  - Getting the evidence: using research in policy making
+A2  - GREAT BRITAIN National Audit Office
+IS  - 
+CY  - 
+PB  - Stationery Office
+T3  - 
+N2  - This report assesses how government departments procure research, against the background of the Office of Science and Technology's programme of rolling reviews. It is based upon an assessment of research activities in three government departments and an international review comparing how five other countries procure research, as well as discussions with other departments and stakeholders. The departmental case studies were: the Department for Environment, Food and Rural Affairs' food borne zoonoses and (animal) tuberculosis research programme plus one of its Executive Agencies, the Centre for Environment, Fisheries and Aquaculture Science; the Department for International Development's Social Science Research Unit; and the Office of the Deputy Prime Minister's housing, homelessness, urban and planning research programme. The report is structured around three different stakeholder perspectives, research managers, research providers and research users - and draws out wider messages about the management, provision, dissemination and use of research.
+N1  - 
+AV  - http://www.nao.org.uk/publications/0203/using_research_in_policy_makin.aspx
+ER  - 
+
+TY  - JOUR
+U1  - ITT2636629
+T1  - 
+A1  - Deelstra, Y.
+A1  - Nooteboom, S.G.
+A1  - Kohlmann, H.R.
+A1  - Berg, J., van den
+A1  - Innanen, S.
+Y1  - 
+VL  - 23
+KW  - EPPI-REVIEWER
+SP  - 517 - 541
+JF  - 
+U2  - 
+T2  - 
+A2  - 
+IS  - 5
+CY  - 
+PB  - 
+T3  - 
+N2  - Policy-related research in general, and impact assessments in particular, are too loosely connected to decision-making processes. The result is often sub-optimal or even undesirable, as one of two situations arises: (1) much research is done; however, those with the real power to make decisions do not make use of all of the resulting information, or (2) advocates of contrary opinions struggle with each other, using policy-related research as ammunition. To avoid these unwanted situations, the connection between the world of knowledge and the world of decision-making should be carefully constructed, by connecting the process of decision-making to the academic research and carefully developing research goals in response to the demands of decision-makers. By making these connections in a stepwise manner, knowledge may generate new insights and views for involved decision-makers and stakeholders, thus changing perceptions and problem definitions. In this way, these actors learn about the possibilities of several alternatives as well as each other's perceptions, and thus can make educated decisions leading to the most desirable and socially acceptable solution. The way this proposed method works is illustrated using two cases in The Netherlands: the project ''Mainport Rotterdam'' (the enlargement of the port of Rotterdam), the project ''A fifth runway for Amsterdam Airport (Schiphol)''.
+N1  - Language: English. SourceInfo: 23:5. pp.517-541. 2003 (8) (6054). IDLink: 1036796. Document Type: Article. SubjectClass: Economics. Subject: Knowledge; Decision making; Environmental policy; Stakeholder; Environmental management; Research; Social participation; Environment. Geographic Subject: Netherlands; UpdateCode: 20081027.
+AV  - 
+ER  - 
+
+TY  - JOUR
+U1  - ITT2788239
+T1  - The use of scientific knowledge in the decision making process of environmental public policies in BrazilAN  - 863896230; 4189270
+A1  - Carneiro, Maria JosÃ©
+A1  - Silva-Rosa, Teresa da
+Y1  - Mar 2011
+VL  - 1
+KW  - EPPI-REVIEWER
+SP  - 
+JF  - JCOM
+U2  - 
+T2  - 
+A2  - 
+IS  - 
+CY  - 
+PB  - 
+T3  - 
+N2  - 
+N1  - Date revised - 2011-04-27; Language of summary - English; ProQuest ID - 863896230; SubjectsTermNotLitGenreText - Science; Knowledge; Decision making; Environmental policy; Biodiversity; Conservation; Land use; Science policy; Brazil; SuppNotes - Online only; Last updated - 2011-04-29; British nursing index edition - JCOM, vol. 1, Mar 2011; Corporate institution author - Carneiro, Maria JosÃ©; Silva-Rosa, Teresa da; DOI - IBSS-4189270; 4189270; 1824-2049
+AV  - 
+ER  - 
+
+TY  - JOUR
+U1  - ITT2788357
+T1  - Evaluation by policy makers of a procedure to describe perceived landscape openness.
+A1  - Weitkamp, Gerd
+A1  - Van den Berg, Agnes E
+A1  - Bregt, Arnold K
+A1  - Van Lammeren, Ron J A
+Y1  - 2012//
+VL  - 95
+KW  - EPPI-REVIEWER
+SP  - 17 - 28
+JF  - Journal of environmental management
+U2  - 
+T2  - 
+A2  - 
+IS  - 1
+CY  - 
+PB  - University of Groningen, Faculty of Spatial Sciences, PO Box 800, 9700 AV Groningen, The Netherlands. s.g.weitkamp@rug.nl
+T3  - 
+N2  - In the last decade policy makers have increasingly recognized the need to include people's perceptions in methods for describing landscape quality. At the same time, a third wave of Geographic Information Systems (GIS) has become available that make it technically possible to model landscape quality in a realistic manner. However, as there is often a mismatch between science and policy, it remains unclear to what extent perception-based models developed by scientists can be useful to policy makers. The aim of the present study was to evaluate the usefulness to policy making of a GIS-based procedure for describing perceived landscape openness. To this end, a workshop was organized which was attended by eight Dutch policy makers who acted as representatives of their province (region). The Group Decision Room (GDR) technique was used to elicit the policy makers' evaluations of the procedure in an anonymous and reliable manner. The procedure was presented to the policy makers using cases from their own province, which they assessed using a mixture of qualitative and quantitative methods. The results show that policy makers rated the procedure as being highly relevant to policy making, scientifically credible, usable by policy makers and feasible to implement in the policy making process. They especially appreciated the flexibility and transparency of the procedure. The policy makers concluded that the procedure would be of most value for monitoring landscape changes and for analysing impacts on landscape openness in land use scenario studies. However, they requested guidelines for proper implementation of the various options in the procedure. In general, the current study shows that explicit and transparent evaluation of the usefulness of GIS-based tools can aid integration at the science-policy interface and help to ensure that both scientists and policy makers are informed of interrelated options and requirements. Copyright Copyright 2011 Elsevier Ltd. All rights reserved.
+N1  - 
+AV  - 
+ER  - 
+
+TY  - JOUR
+U1  - ITT2788378
+T1  - The use of recreation planning tools in U.S. Forest Service NEPA assessments.
+A1  - Cerveny, Lee K
+A1  - Blahna, Dale J
+A1  - Stern, Marc J
+A1  - Mortimer, Michael J
+A1  - Predmore, S Andrew
+A1  - Freeman, James
+Y1  - 2011//
+VL  - 48
+KW  - EPPI-REVIEWER
+SP  - 644 - 57
+JF  - Environmental management
+U2  - 
+T2  - 
+A2  - 
+IS  - 3
+CY  - 
+PB  - Pacific Northwest Research Station, USDA Forest Service, 400 NW 34th Street, Suite 201, Seattle, WA 98103, USA. lcerveny@fs.fed.us
+T3  - 
+N2  - U.S. Forest Service managers are required to incorporate social and biophysical science information in planning and environmental analysis. The use of science is mandated by the National Environmental Policy Act, the National Forest Management Act, and U.S. Forest Service planning rules. Despite the agency's emphasis on 'science-based' decision-making, little is known about how science is actually used in recreation planning and management. This study investigated the perceptions of Forest Service interdisciplinary (ID) team leaders for 106 NEPA projects dealing with recreation and travel management between 2005 and 2008. Our survey data show how managers rate the importance of social and biophysical science compared to other potential 'success factors' in NEPA assessments. We also explore how team leaders value and use multi-disciplinary tools for recreation-related assessments. Results suggest that managers employ a variety of recreation planning tools in NEPA projects, but there appears to be no common understanding or approach for how or when these tools are incorporated. The Recreation Opportunity Spectrum (ROS) was the most frequently used planning tool, but the Visitor Experience and Resource Protection (VERP) framework was the most consistently valued tool by those who used it. We recommend further evaluation of the strengths and weaknesses of each planning tool and future development of procedures to select appropriate planning tools for use in recreation-related NEPA assessments.
+N1  - 
+AV  - 
+ER  - 
+
+TY  - JOUR
+U1  - ITT2790445
+T1  - Evidence-Based Practice and the Use of Information in State Agency Decision Making.
+A1  - Jennings, Edward T.1
+A1  - Hall, Jeremy L.2
+Y1  - 2012/04//
+VL  - 22
+KW  - EPPI-REVIEWER
+SP  - 245 - 266
+JF  - Journal of Public Administration Research & Theory
+U2  - 
+T2  - 
+A2  - 
+IS  - 2
+CY  - 
+PB  - 
+T3  - 
+N2  - An essay is presented on the use of information and the evidence-based practice (EBP) in state agency decision making regarding programmatic operations. The authors present a 2008 study which reveals that almost of the state agencies rely on their own walls for information in guiding their policy decisions and program. They also discuss the background of EBP and EB public policy, scientific studies on EBP, and validity and reliability of EB policy.
+N1  - Accession Number: 74075160; Authors: Jennings, Edward T. 1; Hall, Jeremy L. 2; Affiliations:  1: University of Kentucky;  2: University of Texas at Dallas; Subject: Essays; Subject: Government agencies; Subject: Decision making; Subject: Government policy; Subject: Problem solving; Number of Pages: 22p; Illustrations: 5 Charts; Record Type: Essay
+AV  - 
+ER  - 
+
+TY  - JOUR
+U1  - ITT2790449
+T1  - Cognizance and Consultation of Randomized Controlled Trials among Ministerial Policy Analysts.
+A1  - Bédard, Pierre-Olivier1
+A1  - Ouimet, Mathieu1
+Y1  - 2012/09//
+VL  - 29
+KW  - EPPI-REVIEWER
+SP  - 625 - 644
+JF  - Review of Policy Research
+U2  - 
+T2  - 
+A2  - 
+IS  - 5
+CY  - 
+PB  - 
+T3  - 
+N2  - Consultation of scientific evidence by policy actors has been the foci of attention of knowledge utilization scholars for decades. The present study questioned the extent to which randomized controlled trials ( RCTs)-generally seen as the gold standard of scientific research-are known and consulted by policy analysts in ministerial settings. Using cross-sectional data collected in 17 ministries in Québec ( Canada), our study showed that fairly high levels of policy analysts report never having heard of RCTs, thus possibly hindering effective communication of scientific results to relevant policy makers. Statistical analyses reveal the importance of cognitive factors in explaining both phenomena. [ABSTRACT FROM AUTHOR]
+N1  - Accession Number: 78322383; Authors: Bédard, Pierre-Olivier 1; Ouimet, Mathieu 1; Affiliations:  1: Université Laval; Subject: Policy analysis; Subject: Policy scientists; Subject: Government policy -- Research; Subject: Nonlinear regression; Subject: Cross-sectional method; Subject: Decision making; Author-Supplied Keyword: evidence-informed policy making; Author-Supplied Keyword: knowledge utilization; Author-Supplied Keyword: nonlinear regression; Author-Supplied Keyword: policy analysis; Author-Supplied Keyword: randomized controlled trials; Number of Pages: 19p; Illustrations: 3 Charts, 1 Graph; Record Type: Article
+AV  - 
+ER  - 
+
+TY  - JOUR
+U1  - ITT2791076
+T1  - Compliance of Australian threatened species recovery plans with legislative requirements.
+A1  - Ortega-Argueta, Alejandro, alejandro.ortega@inecol.edu.mx
+A1  - Baxter, Greg1
+A1  - Hockings, Marc1
+Y1  - 2011/08//
+VL  - 92
+KW  - EPPI-REVIEWER
+SP  - 2054 - 2060
+JF  - Journal of Environmental Management
+U2  - 
+T2  - 
+A2  - 
+IS  - 8
+CY  - 
+PB  - 
+T3  - 
+N2  - Recovery plans are the main documents supporting management decision-making for threatened species. We evaluated Australian recovery plans to assess their appropriateness as conservation and management planning instruments. Six legislative requirements (species information and general requirements, species distribution and location, known and potential threats, objectives, performance criteria and actions, duration of the plan, and estimated costs of plan implementation) were used to assess the degree of compliance of recovery plans with the relevant legislation. We assessed all 236 official recovery plans which had been adopted as at January 2006. The results showed that plans were most compliant regarding the setting of objectives, performance criteria, recovery actions, and duration of plan. Most plans included a single performance criterion that was generally related to the population status of target species. Improvement is required in relation to identification of current threats and critical habitats, and the establishment of basic elements of monitoring and evaluation for measuring recovery progress. Gaps in ecological information are the main factors affecting adequate compliance with legislative requirements as opposed to managerial information (e.g. clarity in establishing the implementation schedule, costs and resource allocation). Planning deficiencies could be addressed by improving the recovery planning guidelines and more carefully reviewing the drafting and adoption of new plans. [Copyright &y& Elsevier]
+N1  - Accession Number: 60768930; Authors: Ortega-Argueta, Alejandro Email Address: alejandro.ortega@inecol.edu.mx; Baxter, Greg 1; Hockings, Marc 1; Affiliations:  1: University of Queensland (UQ), School of Geography, Planning & Environmental Management, St. Lucia, Queensland 4067, Australia; Subject: Wildlife recovery -- Law & legislation; Subject: Environmental regulations; Subject: Environmental management -- Australia; Subject: Conservation of natural resources -- Research; Subject: Ecology -- Research; Subject: Australia; Number of Pages: 7p; Record Type: Article
+AV  - 
+ER  - 
+
