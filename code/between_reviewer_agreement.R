@@ -368,12 +368,13 @@ reviewers <- c(
   Nick      = "data/Nick_agreement_third_round.csv",
   Alvaro    = "data/Alvaro_agreement_second_round.csv",
   Nibu      = "data/Nibu_agreement_second_round.csv",
-  Isa       = "data/Isa_agreement_second_round.csv",
+  Isa       = "data/Isa_agreement_third_round.csv",
   Eñaut     = "data/Enaut_agreement_second_round.csv",
   Ian       = "data/Ian_agreement_second_round.csv",
   Jamie     = "data/Jamie_agreement_second_round.csv",
   Santiago  = "data/Santiago_agreement_second_round.csv",
-  Fereshteh = "data/Fereshteh_agreement_second_round.csv"
+  Fereshteh = "data/Fereshteh_agreement_second_round.csv",
+  Aidan     = "data/Aidan_agreement_second_round.csv"
 )
 
 agreement_results <- map2(
