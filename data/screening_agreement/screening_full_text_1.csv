@@ -1,0 +1,366 @@
+created_at,user_id,user_email,article_id,key,value
+2024-10-18T11:32:11.718Z,448594,phil.martin.research@gmail.com,83177408,included,1
+2024-10-18T11:32:45.654Z,448594,phil.martin.research@gmail.com,83177409,included,1
+2024-10-18T11:33:30.549Z,448594,phil.martin.research@gmail.com,83177410,included,1
+2025-01-28T09:48:36.804Z,448594,phil.martin.research@gmail.com,83177421,included,1
+2025-01-28T15:12:30.797Z,448594,phil.martin.research@gmail.com,83177416,included,1
+2025-01-28T15:14:36.432Z,448594,phil.martin.research@gmail.com,83177418,included,1
+2025-01-28T15:18:16.331Z,448594,phil.martin.research@gmail.com,83177423,included,1
+2025-01-30T08:43:36.710Z,0,rayyan@rayyan.ai,83177408,"""__SYSTEM__SAMPLE__c8ec392c388730c4c6deb36dc3dfd181_13326""",1
+2025-01-30T08:43:36.859Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__SAMPLE__c8ec392c388730c4c6deb36dc3dfd181_13326""",1
+2025-01-30T08:44:22.554Z,448594,phil.martin.research@gmail.com,83177440,included,1
+2025-02-26T05:35:58.311Z,448594,phil.martin.research@gmail.com,83177435,included,1
+2025-02-26T05:38:09.994Z,448594,phil.martin.research@gmail.com,83177449,included,1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177408,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177409,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177410,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__STAGE__70058""",1
+2025-02-26T09:19:29.359Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__STAGE__70058""",1
+2025-02-28T10:59:30.444Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__SAMPLE__1844316c46179ea4d070527c2a6eda09_15194""",1
+2025-03-03T08:02:34.822Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__SAMPLE__5ef013fd1ac260e2ad077cb0f803864e_15279""",1
+2025-03-03T08:02:35.669Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__SAMPLE__5ef013fd1ac260e2ad077cb0f803864e_15280""",1
+2025-03-03T08:02:35.753Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__SAMPLE__5ef013fd1ac260e2ad077cb0f803864e_15280""",1
+2025-03-03T08:02:36.998Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__SAMPLE__5ef013fd1ac260e2ad077cb0f803864e_15281""",1
+2025-03-03T08:02:37.082Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__SAMPLE__5ef013fd1ac260e2ad077cb0f803864e_15281""",1
+2025-03-03T08:02:37.285Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__SAMPLE__5ef013fd1ac260e2ad077cb0f803864e_15282""",1
+2025-03-03T08:02:37.783Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__SAMPLE__5ef013fd1ac260e2ad077cb0f803864e_15282""",1
+2025-03-03T08:05:25.127Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__SAMPLE__7e180c281ac02758a82cc34f7e6794d7_15289""",1
+2025-03-03T08:05:26.691Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__SAMPLE__7e180c281ac02758a82cc34f7e6794d7_15290""",1
+2025-03-03T08:05:27.824Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__SAMPLE__7e180c281ac02758a82cc34f7e6794d7_15291""",1
+2025-03-03T08:05:28.368Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__SAMPLE__7e180c281ac02758a82cc34f7e6794d7_15292""",1
+2025-03-03T08:05:29.510Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__SAMPLE__7e180c281ac02758a82cc34f7e6794d7_15293""",1
+2025-03-03T20:37:21.644Z,793584,amirmohammadif@gmail.com,83177409,included,1
+2025-03-03T22:17:00.537Z,793584,amirmohammadif@gmail.com,83177416,included,1
+2025-03-05T22:03:55.846Z,793584,amirmohammadif@gmail.com,83177440,included,-1
+2025-03-06T08:51:27.088Z,793584,amirmohammadif@gmail.com,83177408,included,-1
+2025-03-06T08:51:47.045Z,793584,amirmohammadif@gmail.com,83177410,included,-1
+2025-03-06T09:07:26.998Z,793584,amirmohammadif@gmail.com,83177418,included,1
+2025-03-06T12:29:14.527Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__SAMPLE__6162b2583ac27b37ac06dfc5672321e9_15498""",1
+2025-03-06T12:29:15.388Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__SAMPLE__6162b2583ac27b37ac06dfc5672321e9_15498""",1
+2025-03-06T12:29:15.631Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__SAMPLE__6162b2583ac27b37ac06dfc5672321e9_15498""",1
+2025-03-06T12:29:19.389Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__SAMPLE__6162b2583ac27b37ac06dfc5672321e9_15502""",1
+2025-03-06T12:29:19.457Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__SAMPLE__6162b2583ac27b37ac06dfc5672321e9_15502""",1
+2025-03-06T12:29:19.996Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__SAMPLE__6162b2583ac27b37ac06dfc5672321e9_15502""",1
+2025-03-06T12:29:22.630Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__SAMPLE__6162b2583ac27b37ac06dfc5672321e9_15505""",1
+2025-03-06T14:28:05.457Z,793584,amirmohammadif@gmail.com,83177421,included,1
+2025-03-06T14:28:18.404Z,793584,amirmohammadif@gmail.com,83177423,included,1
+2025-03-06T14:35:17.362Z,793584,amirmohammadif@gmail.com,83177435,included,1
+2025-03-06T14:35:53.247Z,793584,amirmohammadif@gmail.com,83177449,included,1
+2025-03-07T06:16:04.303Z,793581,santip1320@gmail.com,83177408,included,1
+2025-03-07T06:16:21.462Z,793581,santip1320@gmail.com,83177409,included,1
+2025-03-07T06:16:34.095Z,793581,santip1320@gmail.com,83177410,included,0
+2025-03-07T06:19:41.032Z,793581,santip1320@gmail.com,83177416,included,1
+2025-03-07T06:20:28.144Z,793581,santip1320@gmail.com,83177418,included,1
+2025-03-07T06:21:24.015Z,793581,santip1320@gmail.com,83177421,included,1
+2025-03-07T06:22:07.370Z,793581,santip1320@gmail.com,83177423,included,1
+2025-03-07T06:39:33.691Z,793581,santip1320@gmail.com,83177410,included,1
+2025-03-09T09:06:37.987Z,563832,alice.m.oswald@durham.ac.uk,83177418,included,1
+2025-03-10T17:01:14.588Z,809822,tltk2@cam.ac.uk,83177416,"""__EXR__Not about Evidence use""",1
+2025-03-10T17:01:14.640Z,809822,tltk2@cam.ac.uk,83177416,included,-1
+2025-03-10T17:02:27.679Z,809822,tltk2@cam.ac.uk,83177435,included,1
+2025-03-10T17:02:58.992Z,809822,tltk2@cam.ac.uk,83177440,"""__EXR__Not about conservation""",1
+2025-03-10T17:02:59.010Z,809822,tltk2@cam.ac.uk,83177440,included,-1
+2025-03-13T18:26:23.083Z,809822,tltk2@cam.ac.uk,83177416,"""__EXR__Not about Evidence use""",deleted
+2025-03-13T18:26:46.023Z,809822,tltk2@cam.ac.uk,83177416,included,1
+2025-03-13T18:27:29.511Z,809822,tltk2@cam.ac.uk,83177440,included,1
+2025-03-17T10:53:39.884Z,448594,phil.martin.research@gmail.com,83177408,"""Example studies - Good""",1
+2025-03-17T10:53:39.884Z,448594,phil.martin.research@gmail.com,83177409,"""Example studies - Good""",1
+2025-03-26T09:54:17.668Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__SAMPLE__730a823cae12798df7c211cebf91c4ae_16733""",1
+2025-03-26T09:55:08.584Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__SAMPLE__10a5e0f6eb0a9d1a4c4eae730730cf7f_16734""",1
+2025-04-01T08:25:03.307Z,817493,sarah.luke@nottingham.ac.uk,83177408,included,1
+2025-04-01T08:25:53.062Z,817493,sarah.luke@nottingham.ac.uk,83177409,included,1
+2025-04-01T08:27:01.784Z,817493,sarah.luke@nottingham.ac.uk,83177410,"""__EXR__Not about factors that influence evidence use""",1
+2025-04-01T08:27:01.805Z,817493,sarah.luke@nottingham.ac.uk,83177410,included,-1
+2025-04-01T08:27:47.621Z,817493,sarah.luke@nottingham.ac.uk,83177410,included,1
+2025-04-01T08:27:56.569Z,817493,sarah.luke@nottingham.ac.uk,83177410,"""__EXR__Not about factors that influence evidence use""",deleted
+2025-04-01T08:30:07.773Z,817493,sarah.luke@nottingham.ac.uk,83177410,included,-1
+2025-04-01T08:30:12.893Z,817493,sarah.luke@nottingham.ac.uk,83177410,"""__EXR__Not about factors that influence evidence use""",1
+2025-04-01T08:30:12.911Z,817493,sarah.luke@nottingham.ac.uk,83177410,included,-1
+2025-04-01T08:43:28.178Z,817493,sarah.luke@nottingham.ac.uk,83177416,included,1
+2025-04-01T08:48:00.763Z,817493,sarah.luke@nottingham.ac.uk,83177418,included,1
+2025-04-01T08:59:27.650Z,817493,sarah.luke@nottingham.ac.uk,83177421,included,1
+2025-04-01T09:03:05.095Z,817493,sarah.luke@nottingham.ac.uk,83177423,included,1
+2025-04-01T09:03:12.820Z,817493,sarah.luke@nottingham.ac.uk,83177423,included,1
+2025-04-01T14:33:16.754Z,817493,sarah.luke@nottingham.ac.uk,83177449,included,1
+2025-04-02T17:00:44.389Z,809822,tltk2@cam.ac.uk,83177440,"""__EXR__Not about conservation""",deleted
+2025-04-07T14:51:54.357Z,448594,phil.martin.research@gmail.com,83177449,"""Sarah - to check""",1
+2025-04-07T14:51:54.358Z,448594,phil.martin.research@gmail.com,83177449,"""Iris - to check""",deleted
+2025-04-07T14:51:54.363Z,448594,phil.martin.research@gmail.com,83177449,"""Catia - to check""",deleted
+2025-04-08T10:52:13.827Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177408,note-11830801,1
+2025-04-08T10:52:15.258Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177408,included,1
+2025-04-08T10:53:06.303Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177409,included,1
+2025-04-08T10:53:52.166Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177410,included,1
+2025-04-11T15:34:06.406Z,840759,alvaro.moreno@bc3research.org,83177408,"""__EXR__No about conservation""",1
+2025-04-11T15:34:06.420Z,840759,alvaro.moreno@bc3research.org,83177408,included,-1
+2025-04-11T15:41:40.874Z,840759,alvaro.moreno@bc3research.org,83177409,included,1
+2025-04-11T15:55:40.724Z,840759,alvaro.moreno@bc3research.org,83177410,included,1
+2025-04-11T16:55:20.848Z,840759,alvaro.moreno@bc3research.org,83177416,included,1
+2025-04-11T17:18:54.661Z,840759,alvaro.moreno@bc3research.org,83177418,"""__EXR__No about conservation""",1
+2025-04-11T17:18:54.714Z,840759,alvaro.moreno@bc3research.org,83177418,included,-1
+2025-04-11T17:35:22.075Z,840759,alvaro.moreno@bc3research.org,83177421,"""__EXR__Not about Evidence use""",1
+2025-04-11T17:35:22.122Z,840759,alvaro.moreno@bc3research.org,83177421,included,-1
+2025-04-11T17:39:31.345Z,840759,alvaro.moreno@bc3research.org,83177423,included,1
+2025-04-11T18:25:39.650Z,840759,alvaro.moreno@bc3research.org,83177449,included,1
+2025-04-14T07:45:35.945Z,840759,alvaro.moreno@bc3research.org,83177408,included__SYSTEM__STAGE__70058,0
+2025-04-14T07:46:24.395Z,840759,alvaro.moreno@bc3research.org,83177408,included__SYSTEM__STAGE__70058,-1
+2025-04-14T07:46:30.462Z,840759,alvaro.moreno@bc3research.org,83177408,included__SYSTEM__STAGE__70058,-1
+2025-04-14T07:46:32.518Z,840759,alvaro.moreno@bc3research.org,83177408,included__SYSTEM__STAGE__70058,-1
+2025-04-14T07:46:34.557Z,840759,alvaro.moreno@bc3research.org,83177408,included__SYSTEM__STAGE__70058,-1
+2025-04-14T08:27:25.839Z,448594,phil.martin.research@gmail.com,83177408,"""__EXR__Not empirical (no primary data)""",1
+2025-04-14T08:27:25.852Z,448594,phil.martin.research@gmail.com,83177408,included__SYSTEM__STAGE__70058,-1
+2025-04-14T08:28:45.684Z,448594,phil.martin.research@gmail.com,83177409,included__SYSTEM__STAGE__70058,-1
+2025-04-14T08:30:33.879Z,448594,phil.martin.research@gmail.com,83177410,included__SYSTEM__STAGE__70058,-1
+2025-04-14T08:30:46.664Z,448594,phil.martin.research@gmail.com,83177409,"""__EXR__Not empirical (no primary data)""",1
+2025-04-14T08:30:46.674Z,448594,phil.martin.research@gmail.com,83177409,included__SYSTEM__STAGE__70058,-1
+2025-04-14T08:30:53.754Z,448594,phil.martin.research@gmail.com,83177410,"""__EXR__Not about factors that influence evidence use""",1
+2025-04-14T08:30:53.772Z,448594,phil.martin.research@gmail.com,83177410,included__SYSTEM__STAGE__70058,-1
+2025-04-14T09:03:11.291Z,448594,phil.martin.research@gmail.com,83177416,included__SYSTEM__STAGE__70058,1
+2025-04-14T09:08:17.771Z,448594,phil.martin.research@gmail.com,83177418,included__SYSTEM__STAGE__70058,1
+2025-04-14T09:12:40.808Z,448594,phil.martin.research@gmail.com,83177421,included__SYSTEM__STAGE__70058,1
+2025-04-14T09:17:32.498Z,448594,phil.martin.research@gmail.com,83177423,"""__EXR__Not about policy or practice""",1
+2025-04-14T09:17:32.516Z,448594,phil.martin.research@gmail.com,83177423,included__SYSTEM__STAGE__70058,-1
+2025-04-14T10:03:34.235Z,448594,phil.martin.research@gmail.com,83177435,included__SYSTEM__STAGE__70058,1
+2025-04-14T10:07:47.128Z,448594,phil.martin.research@gmail.com,83177440,included__SYSTEM__STAGE__70058,1
+2025-04-14T10:09:47.261Z,448594,phil.martin.research@gmail.com,83177449,included__SYSTEM__STAGE__70058,1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177408,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177409,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177410,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T12:08:35.856Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__STAGE__70058""",1
+2025-04-14T17:05:33.755Z,840756,enaut.martinezdebirgara@bc3research.org,83177408,included,1
+2025-04-14T17:07:22.362Z,840756,enaut.martinezdebirgara@bc3research.org,83177409,included,1
+2025-04-14T17:10:48.236Z,840756,enaut.martinezdebirgara@bc3research.org,83177410,included,1
+2025-04-23T13:02:35.897Z,793581,santip1320@gmail.com,83177435,included,1
+2025-04-24T13:30:50.045Z,448594,phil.martin.research@gmail.com,83177421,"""Santiago - to check""",1
+2025-04-24T13:30:50.045Z,448594,phil.martin.research@gmail.com,83177423,"""Santiago - to check""",1
+2025-04-30T06:45:16.079Z,793580,valentin.moser@wsl.ch,83177408,"""__EXR__Not about Evidence use""",1
+2025-04-30T06:45:16.101Z,793580,valentin.moser@wsl.ch,83177408,included,-1
+2025-04-30T06:46:00.359Z,793580,valentin.moser@wsl.ch,83177409,included,1
+2025-04-30T06:46:38.086Z,793580,valentin.moser@wsl.ch,83177410,included,1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177408,"""Santiago - to check""",1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177409,"""Santiago - to check""",1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177410,"""Santiago - to check""",1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177416,"""Santiago - to check""",1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177418,"""Santiago - to check""",1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177421,"""Santiago - to check""",1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177423,"""Santiago - to check""",1
+2025-06-12T09:45:47.782Z,448594,phil.martin.research@gmail.com,83177435,"""Santiago - to check""",1
+2025-06-12T12:33:38.287Z,793581,santip1320@gmail.com,83177449,included,0
+2025-06-12T12:33:47.206Z,793581,santip1320@gmail.com,83177449,note-13451223,1
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177408,"""Santiago - to check""",deleted
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177409,"""Santiago - to check""",deleted
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177410,"""Santiago - to check""",deleted
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177416,"""Santiago - to check""",deleted
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177418,"""Santiago - to check""",deleted
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177421,"""Santiago - to check""",deleted
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177423,"""Santiago - to check""",deleted
+2025-06-12T14:46:08.970Z,448594,phil.martin.research@gmail.com,83177435,"""Santiago - to check""",deleted
+2025-06-12T14:48:22.151Z,448594,phil.martin.research@gmail.com,83177421,"""Santiago - to check""",1
+2025-06-12T14:48:22.151Z,448594,phil.martin.research@gmail.com,83177423,"""Santiago - to check""",1
+2025-06-12T14:48:54.664Z,448594,phil.martin.research@gmail.com,83177449,"""Santiago - to check""",1
+2025-06-16T11:29:22.265Z,448594,phil.martin.research@gmail.com,83177409,"""Fereshteh - new to check""",1
+2025-06-16T11:29:22.265Z,448594,phil.martin.research@gmail.com,83177416,"""Fereshteh - new to check""",1
+2025-06-16T11:29:22.265Z,448594,phil.martin.research@gmail.com,83177418,"""Fereshteh - new to check""",1
+2025-06-16T11:29:22.265Z,448594,phil.martin.research@gmail.com,83177421,"""Fereshteh - new to check""",1
+2025-06-16T11:29:22.265Z,448594,phil.martin.research@gmail.com,83177423,"""Fereshteh - new to check""",1
+2025-06-16T11:29:22.265Z,448594,phil.martin.research@gmail.com,83177435,"""Fereshteh - new to check""",1
+2025-06-16T11:29:22.265Z,448594,phil.martin.research@gmail.com,83177449,"""Fereshteh - new to check""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177408,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177409,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177410,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177416,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177418,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177421,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177423,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177435,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177440,"""Included for full-text screening""",1
+2025-06-23T09:35:39.865Z,448594,phil.martin.research@gmail.com,83177449,"""Included for full-text screening""",1
+2025-06-23T12:21:38.294Z,448594,phil.martin.research@gmail.com,83177408,"""Full-text screening check""",1
+2025-06-23T12:21:38.294Z,448594,phil.martin.research@gmail.com,83177409,"""Full-text screening check""",1
+2025-06-23T12:21:38.294Z,448594,phil.martin.research@gmail.com,83177410,"""Full-text screening check""",1
+2025-06-23T12:21:38.294Z,448594,phil.martin.research@gmail.com,83177423,"""Full-text screening check""",1
+2025-06-23T12:37:00.838Z,448594,phil.martin.research@gmail.com,83177449,"""Sarah - to check""",deleted
+2025-06-23T12:40:07.229Z,448594,phil.martin.research@gmail.com,83177408,"""Example studies - Good""",deleted
+2025-06-23T12:40:07.229Z,448594,phil.martin.research@gmail.com,83177409,"""Example studies - Good""",deleted
+2025-06-23T12:45:25.573Z,448594,phil.martin.research@gmail.com,83177416,"""Full-text screening check""",1
+2025-06-23T12:45:25.573Z,448594,phil.martin.research@gmail.com,83177418,"""Full-text screening check""",1
+2025-06-23T12:45:25.573Z,448594,phil.martin.research@gmail.com,83177421,"""Full-text screening check""",1
+2025-06-23T12:45:25.573Z,448594,phil.martin.research@gmail.com,83177435,"""Full-text screening check""",1
+2025-06-23T12:45:25.573Z,448594,phil.martin.research@gmail.com,83177440,"""Full-text screening check""",1
+2025-06-23T12:45:25.573Z,448594,phil.martin.research@gmail.com,83177449,"""Full-text screening check""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177410,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177409,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177408,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-23T13:46:47.236Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__SAMPLE__70d82b8282bc3c6fa33e06fe48bd47e8_21845""",1
+2025-06-25T05:21:59.021Z,793579,prishnee.bissessur1@gmail.com,83177408,included__SYSTEM__STAGE__70058,1
+2025-06-25T05:36:28.629Z,793579,prishnee.bissessur1@gmail.com,83177409,included__SYSTEM__STAGE__70058,0
+2025-06-25T05:38:52.621Z,793579,prishnee.bissessur1@gmail.com,83177410,note-13784417,1
+2025-06-25T14:20:55.330Z,793576,carlos.barreto@algomau.ca,83177408,"""__EXR__No about conservation""",1
+2025-06-25T14:20:55.351Z,793576,carlos.barreto@algomau.ca,83177408,included__SYSTEM__STAGE__70058,-1
+2025-06-25T14:35:06.920Z,793576,carlos.barreto@algomau.ca,83177409,"""__EXR__Not empirical (no primary data)""",1
+2025-06-25T14:35:06.964Z,793576,carlos.barreto@algomau.ca,83177409,included__SYSTEM__STAGE__70058,-1
+2025-06-25T14:54:28.135Z,793576,carlos.barreto@algomau.ca,83177410,"""__EXR__Not about factors that influence evidence use""",1
+2025-06-25T14:54:28.204Z,793576,carlos.barreto@algomau.ca,83177410,included__SYSTEM__STAGE__70058,-1
+2025-06-25T15:01:33.649Z,793576,carlos.barreto@algomau.ca,83177416,included__SYSTEM__STAGE__70058,1
+2025-06-25T15:05:40.030Z,793576,carlos.barreto@algomau.ca,83177418,"""__EXR__No about conservation""",deleted
+2025-06-25T15:11:39.358Z,793576,carlos.barreto@algomau.ca,83177418,included__SYSTEM__STAGE__70058,1
+2025-06-25T15:14:39.728Z,793576,carlos.barreto@algomau.ca,83177421,included__SYSTEM__STAGE__70058,1
+2025-06-25T15:14:45.753Z,793576,carlos.barreto@algomau.ca,83177421,"""__EXR__Not about Evidence use""",deleted
+2025-06-25T15:25:24.467Z,793576,carlos.barreto@algomau.ca,83177423,"""__EXR__Not about factors that influence evidence use""",1
+2025-06-25T15:25:24.526Z,793576,carlos.barreto@algomau.ca,83177423,included__SYSTEM__STAGE__70058,-1
+2025-06-25T15:36:02.991Z,793576,carlos.barreto@algomau.ca,83177440,"""__EXR__Not about factors that influence evidence use""",1
+2025-06-25T15:36:03.046Z,793576,carlos.barreto@algomau.ca,83177440,included__SYSTEM__STAGE__70058,-1
+2025-06-25T15:44:06.931Z,793576,carlos.barreto@algomau.ca,83177435,included__SYSTEM__STAGE__70058,0
+2025-06-25T15:45:08.351Z,793576,carlos.barreto@algomau.ca,83177440,note-13799216,1
+2025-06-25T15:45:35.469Z,793576,carlos.barreto@algomau.ca,83177440,note-13799216,deleted
+2025-06-25T15:45:43.406Z,793576,carlos.barreto@algomau.ca,83177435,note-13799237,1
+2025-06-25T15:47:12.194Z,793576,carlos.barreto@algomau.ca,83177435,note-13799237,edited
+2025-06-25T15:51:06.174Z,793576,carlos.barreto@algomau.ca,83177449,included__SYSTEM__STAGE__70058,1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177408,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177409,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177410,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T09:23:57.367Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__STAGE__70058""",1
+2025-06-26T12:12:34.721Z,448594,phil.martin.research@gmail.com,83177449,"""To check for next stage""",1
+2025-06-26T12:12:59.714Z,448594,phil.martin.research@gmail.com,83177409,"""To check for next stage""",1
+2025-06-26T12:12:59.714Z,448594,phil.martin.research@gmail.com,83177416,"""To check for next stage""",1
+2025-06-26T12:12:59.714Z,448594,phil.martin.research@gmail.com,83177423,"""To check for next stage""",1
+2025-06-26T12:12:59.714Z,448594,phil.martin.research@gmail.com,83177435,"""To check for next stage""",1
+2025-06-27T17:02:18.202Z,563832,alice.m.oswald@durham.ac.uk,83177408,"""__EXR__Not about empirical data""",1
+2025-06-27T17:02:18.254Z,563832,alice.m.oswald@durham.ac.uk,83177408,included__SYSTEM__STAGE__70058,-1
+2025-06-27T17:03:24.662Z,563832,alice.m.oswald@durham.ac.uk,83177408,"""__EXR__Not about empirical data""",1
+2025-06-27T17:03:24.679Z,563832,alice.m.oswald@durham.ac.uk,83177408,included__SYSTEM__STAGE__70058,-1
+2025-06-27T17:03:24.695Z,563832,alice.m.oswald@durham.ac.uk,83177408,"""__EXR__Not about Evidence use""",deleted
+2025-06-27T17:04:57.564Z,563832,alice.m.oswald@durham.ac.uk,83177409,"""__EXR__Not a primary study""",1
+2025-06-27T17:04:57.582Z,563832,alice.m.oswald@durham.ac.uk,83177409,included__SYSTEM__STAGE__70058,-1
+2025-06-27T17:13:24.687Z,563832,alice.m.oswald@durham.ac.uk,83177410,"""__EXR__Not about empirical data""",1
+2025-06-27T17:13:24.709Z,563832,alice.m.oswald@durham.ac.uk,83177410,included__SYSTEM__STAGE__70058,-1
+2025-06-30T11:32:41.727Z,817493,sarah.luke@nottingham.ac.uk,83177408,included__SYSTEM__STAGE__70058,1
+2025-06-30T11:37:26.614Z,817493,sarah.luke@nottingham.ac.uk,83177409,"""Not a primary study""",1
+2025-06-30T11:37:54.277Z,817493,sarah.luke@nottingham.ac.uk,83177409,"""Not a primary study""",deleted
+2025-06-30T11:38:23.826Z,817493,sarah.luke@nottingham.ac.uk,83177409,"""__EXR__wrong publication type""",1
+2025-06-30T11:38:23.837Z,817493,sarah.luke@nottingham.ac.uk,83177409,included__SYSTEM__STAGE__70058,-1
+2025-06-30T11:38:23.853Z,817493,sarah.luke@nottingham.ac.uk,83177409,"""__EXR__wrong study design""",deleted
+2025-06-30T11:41:48.835Z,817493,sarah.luke@nottingham.ac.uk,83177408,"""__EXR__wrong publication type""",1
+2025-06-30T11:41:49.636Z,817493,sarah.luke@nottingham.ac.uk,83177408,included__SYSTEM__STAGE__70058,-1
+2025-07-01T06:03:13.273Z,793579,prishnee.bissessur1@gmail.com,83177416,included__SYSTEM__STAGE__70058,1
+2025-07-01T09:08:25.951Z,817493,sarah.luke@nottingham.ac.uk,83177410,"""__EXR__wrong publication type""",1
+2025-07-01T09:08:25.969Z,817493,sarah.luke@nottingham.ac.uk,83177410,included__SYSTEM__STAGE__70058,-1
+2025-07-01T09:08:25.982Z,817493,sarah.luke@nottingham.ac.uk,83177410,"""__EXR__wrong study design""",1
+2025-07-01T09:08:25.992Z,817493,sarah.luke@nottingham.ac.uk,83177410,included__SYSTEM__STAGE__70058,-1
+2025-07-01T09:08:26.007Z,817493,sarah.luke@nottingham.ac.uk,83177410,"""__EXR__Not about factors that influence evidence use""",deleted
+2025-07-01T09:11:11.946Z,817493,sarah.luke@nottingham.ac.uk,83177416,included__SYSTEM__STAGE__70058,1
+2025-07-01T09:15:11.834Z,817493,sarah.luke@nottingham.ac.uk,83177418,included__SYSTEM__STAGE__70058,1
+2025-07-01T09:21:12.831Z,817493,sarah.luke@nottingham.ac.uk,83177421,included__SYSTEM__STAGE__70058,1
+2025-07-01T09:32:42.731Z,817493,sarah.luke@nottingham.ac.uk,83177423,included__SYSTEM__STAGE__70058,1
+2025-07-01T09:40:50.927Z,817493,sarah.luke@nottingham.ac.uk,83177435,included__SYSTEM__STAGE__70058,1
+2025-07-01T09:48:09.805Z,817493,sarah.luke@nottingham.ac.uk,83177440,"""__EXR__Not about factors that influence evidence use""",1
+2025-07-01T09:48:09.856Z,817493,sarah.luke@nottingham.ac.uk,83177440,included__SYSTEM__STAGE__70058,-1
+2025-07-01T09:48:09.874Z,817493,sarah.luke@nottingham.ac.uk,83177440,"""__EXR__wrong drug""",deleted
+2025-07-01T09:52:56.109Z,817493,sarah.luke@nottingham.ac.uk,83177449,included__SYSTEM__STAGE__70058,1
+2025-07-01T12:05:18.458Z,840759,alvaro.moreno@bc3research.org,83177410,"""__EXR__Not about evidence use""",1
+2025-07-01T12:05:18.474Z,840759,alvaro.moreno@bc3research.org,83177410,included,-1
+2025-07-01T12:24:29.478Z,793584,amirmohammadif@gmail.com,83177408,"""__EXR__Not about conservation""",1
+2025-07-01T12:24:29.500Z,793584,amirmohammadif@gmail.com,83177408,included__SYSTEM__STAGE__70058,-1
+2025-07-01T12:33:57.941Z,793584,amirmohammadif@gmail.com,83177409,included__SYSTEM__STAGE__70058,1
+2025-07-01T21:50:46.145Z,793584,amirmohammadif@gmail.com,83177409,included__SYSTEM__STAGE__70058,1
+2025-07-02T09:42:10.313Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177409,"""__EXR__Not a primary study""",1
+2025-07-02T09:42:10.924Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177409,included__SYSTEM__STAGE__70058,-1
+2025-07-02T09:46:45.644Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177410,"""__EXR__Not a primary study""",1
+2025-07-02T09:46:45.666Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177410,included__SYSTEM__STAGE__70058,-1
+2025-07-02T14:11:43.362Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177421,included__SYSTEM__STAGE__70058,1
+2025-07-02T14:20:30.865Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177440,"""__EXR__Not about biodiversity conservation""",1
+2025-07-02T14:20:30.922Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177440,included__SYSTEM__STAGE__70058,-1
+2025-07-02T14:24:42.495Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177418,included__SYSTEM__STAGE__70058,1
+2025-07-02T15:06:19.174Z,793583,elina.takola@ufz.de,83177408,included,1
+2025-07-02T15:09:45.632Z,793583,elina.takola@ufz.de,83177409,included,1
+2025-07-02T15:10:16.445Z,793583,elina.takola@ufz.de,83177410,included,-1
+2025-07-02T15:10:51.894Z,793583,elina.takola@ufz.de,83177416,included,-1
+2025-07-02T15:12:02.375Z,793583,elina.takola@ufz.de,83177418,included,1
+2025-07-02T15:13:21.296Z,793583,elina.takola@ufz.de,83177421,included,1
+2025-07-02T15:14:14.160Z,793583,elina.takola@ufz.de,83177423,included,-1
+2025-07-02T15:17:20.584Z,793583,elina.takola@ufz.de,83177435,included,-1
+2025-07-02T15:17:45.762Z,793583,elina.takola@ufz.de,83177440,included,1
+2025-07-02T15:21:43.749Z,793583,elina.takola@ufz.de,83177449,included,1
+2025-07-03T09:30:42.657Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177408,included__SYSTEM__STAGE__70058,1
+2025-07-03T09:34:04.150Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177416,included__SYSTEM__STAGE__70058,1
+2025-07-03T09:51:40.617Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177423,"""__EXR__Not about factors that influence evidence use""",1
+2025-07-03T09:51:40.694Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177423,included__SYSTEM__STAGE__70058,-1
+2025-07-03T09:59:39.183Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177435,included__SYSTEM__STAGE__70058,1
+2025-07-03T10:07:49.600Z,793578,tabitha.taberer@jesus.ox.ac.uk,83177449,included__SYSTEM__STAGE__70058,1
+2025-07-03T11:10:41.014Z,813409,isa.donoso@bc3research.org,83177440,"""not about evidence use""",1
+2025-07-03T11:10:43.061Z,813409,isa.donoso@bc3research.org,83177440,included,-1
+2025-07-03T15:22:36.020Z,563832,alice.m.oswald@durham.ac.uk,83177416,"""__EXR__Not a primary study""",1
+2025-07-03T15:22:36.138Z,563832,alice.m.oswald@durham.ac.uk,83177416,included__SYSTEM__STAGE__70058,-1
+2025-07-03T15:26:45.005Z,563832,alice.m.oswald@durham.ac.uk,83177418,included__SYSTEM__STAGE__70058,1
+2025-07-03T15:28:49.769Z,563832,alice.m.oswald@durham.ac.uk,83177421,included__SYSTEM__STAGE__70058,1
+2025-07-03T15:30:35.326Z,563832,alice.m.oswald@durham.ac.uk,83177423,included__SYSTEM__STAGE__70058,1
+2025-07-03T15:32:01.438Z,563832,alice.m.oswald@durham.ac.uk,83177435,included__SYSTEM__STAGE__70058,1
+2025-07-03T15:36:30.104Z,563832,alice.m.oswald@durham.ac.uk,83177440,included__SYSTEM__STAGE__70058,1
+2025-07-03T15:38:44.167Z,563832,alice.m.oswald@durham.ac.uk,83177449,included__SYSTEM__STAGE__70058,1
+2025-07-04T14:24:40.625Z,793584,amirmohammadif@gmail.com,83177410,included__SYSTEM__STAGE__70058,1
+2025-07-04T15:17:28.917Z,793584,amirmohammadif@gmail.com,83177416,"""__EXR__not a primary study""",1
+2025-07-04T15:17:28.909Z,793584,amirmohammadif@gmail.com,83177418,included__SYSTEM__STAGE__70058,-1
+2025-07-04T15:17:28.964Z,793584,amirmohammadif@gmail.com,83177416,included__SYSTEM__STAGE__70058,-1
+2025-07-04T15:38:16.824Z,793584,amirmohammadif@gmail.com,83177421,"""__EXR__not a primary study""",1
+2025-07-04T15:38:16.849Z,793584,amirmohammadif@gmail.com,83177421,included__SYSTEM__STAGE__70058,-1
+2025-07-07T16:49:02.472Z,841732,i.ollard@jbs.cam.ac.uk,83177408,included__SYSTEM__STAGE__70058,1
+2025-07-07T17:21:53.224Z,841732,i.ollard@jbs.cam.ac.uk,83177409,included__SYSTEM__STAGE__70058,1
+2025-07-07T17:27:12.748Z,841732,i.ollard@jbs.cam.ac.uk,83177410,included__SYSTEM__STAGE__70058,1
+2025-07-07T17:40:59.802Z,841732,i.ollard@jbs.cam.ac.uk,83177416,included__SYSTEM__STAGE__70058,1
+2025-07-07T17:43:18.546Z,841732,i.ollard@jbs.cam.ac.uk,83177418,included__SYSTEM__STAGE__70058,1
+2025-07-08T06:43:05.545Z,841732,i.ollard@jbs.cam.ac.uk,83177423,included__SYSTEM__STAGE__70058,1
+2025-07-08T06:43:19.216Z,841732,i.ollard@jbs.cam.ac.uk,83177421,included__SYSTEM__STAGE__70058,1
+2025-07-08T07:52:09.195Z,841732,i.ollard@jbs.cam.ac.uk,83177440,included__SYSTEM__STAGE__70058,1
+2025-07-08T08:04:05.863Z,841732,i.ollard@jbs.cam.ac.uk,83177440,included__SYSTEM__STAGE__70058,1
+2025-07-08T08:32:53.116Z,841732,i.ollard@jbs.cam.ac.uk,83177435,included__SYSTEM__STAGE__70058,1
+2025-07-08T09:48:12.587Z,841732,i.ollard@jbs.cam.ac.uk,83177449,included__SYSTEM__STAGE__70058,1
+2025-07-08T10:57:08.287Z,793579,prishnee.bissessur1@gmail.com,83177449,included__SYSTEM__STAGE__70058,1
+2025-07-08T15:54:13.396Z,448594,phil.martin.research@gmail.com,83177409,"""Included for full-text screening""",1
+2025-07-08T15:54:13.396Z,448594,phil.martin.research@gmail.com,83177416,"""Included for full-text screening""",1
+2025-07-08T15:54:13.396Z,448594,phil.martin.research@gmail.com,83177418,"""Included for full-text screening""",1
+2025-07-08T15:54:13.396Z,448594,phil.martin.research@gmail.com,83177421,"""Included for full-text screening""",1
+2025-07-08T15:54:13.396Z,448594,phil.martin.research@gmail.com,83177423,"""Included for full-text screening""",1
+2025-07-08T15:54:13.396Z,448594,phil.martin.research@gmail.com,83177435,"""Included for full-text screening""",1
+2025-07-08T15:54:13.396Z,448594,phil.martin.research@gmail.com,83177449,"""Included for full-text screening""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177408,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177409,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177410,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:01:54.814Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177408,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177409,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177410,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177416,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177418,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177421,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177423,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177435,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177440,"""__SYSTEM__STAGE__70058""",1
+2025-07-08T16:11:55.437Z,0,rayyan@rayyan.ai,83177449,"""__SYSTEM__STAGE__70058""",1

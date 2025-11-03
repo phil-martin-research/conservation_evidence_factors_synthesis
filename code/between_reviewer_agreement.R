@@ -360,21 +360,21 @@ calc_agreement <- function(csv_file, reviewer_name) {
 
 # List of reviewers and their corresponding files
 reviewers <- c(
-  Tiff      = "data/Tiff_agreement_second_round.csv",
-  Prishnee  = "data/Prishnee_agreement_second_round.csv",
-  Iris      = "data/Iris_agreement_second_round.csv",
-  Sarah     = "data/Sarah_agreement_second_round.csv",
-  Carlos    = "data/Carlos_agreement_second_round.csv",
-  Nick      = "data/Nick_agreement_third_round.csv",
-  Alvaro    = "data/Alvaro_agreement_second_round.csv",
-  Nibu      = "data/Nibu_agreement_second_round.csv",
-  Isa       = "data/Isa_agreement_third_round.csv",
-  Eñaut     = "data/Enaut_agreement_second_round.csv",
-  Ian       = "data/Ian_agreement_second_round.csv",
-  Jamie     = "data/Jamie_agreement_second_round.csv",
-  Santiago  = "data/Santiago_agreement_second_round.csv",
-  Fereshteh = "data/Fereshteh_agreement_second_round.csv",
-  Aidan     = "data/Aidan_agreement_second_round.csv"
+  Tiff      = "data/screening_agreement/Tiff_agreement_second_round.csv",
+  Prishnee  = "data/screening_agreement/Prishnee_agreement_second_round.csv",
+  Iris      = "data/screening_agreement/Iris_agreement_second_round.csv",
+  Sarah     = "data/screening_agreement/Sarah_agreement_second_round.csv",
+  Carlos    = "data/screening_agreement/Carlos_agreement_second_round.csv",
+  Nick      = "data/screening_agreement/Nick_agreement_third_round.csv",
+  Alvaro    = "data/screening_agreement/Alvaro_agreement_third_round.csv",
+  Nibu      = "data/screening_agreement/Nibu_agreement_second_round.csv",
+  Isa       = "data/screening_agreement/Isa_agreement_third_round.csv",
+  Eñaut     = "data/screening_agreement/Enaut_agreement_second_round.csv",
+  Ian       = "data/screening_agreement/Ian_agreement_third_round.csv",
+  Jamie     = "data/screening_agreement/Jamie_agreement_second_round.csv",
+  Santiago  = "data/screening_agreement/Santiago_agreement_third_round.csv",
+  Fereshteh = "data/screening_agreement/Fereshteh_agreement_second_round.csv",
+  Aidan     = "data/screening_agreement/Aidan_agreement_second_round.csv"
 )
 
 agreement_results <- map2(
@@ -385,4 +385,118 @@ agreement_results <- map2(
 
 print(agreement_results)
 
+####################################################
+#check agreement at full text####################
+####################################################
 
+
+# A named vector to recode all user emails at once
+email_lookup <- c(
+  "phil.martin.research@gmail.com" = "Phil",
+  "prishnee.bissessur1@gmail.com" = "Prishnee",
+  "alice.m.oswald@durham.ac.uk"    = "Alice",
+  "tltk2@cam.ac.uk"                = "Tiff",
+  "tabitha.taberer@jesus.ox.ac.uk" = "Tabitha",
+  "carlos.barreto@algomau.ca"      = "Carlos",
+  "elina.takola@ufz.de"            = "Elina",
+  "c.matos@hull.ac.uk"             = "Catia",
+  "ake@ceh.ac.uk"                  = "Aidan",
+  "matthew.grainger@nina.no"       = "Matt",
+  "amirmohammadif@gmail.com"       = "Fereshteh",
+  "ib451@cam.ac.uk"                = "Iris",
+  "jhartup45@gmail.com"            = "Jamie",
+  "santip1320@gmail.com"           = "Santiago",
+  "valentin.moser@wsl.ch"          = "Valentin",
+  "ian.thornhill@manchester.ac.uk" = "Ian",
+  "sarah.luke@nottingham.ac.uk"    = "Sarah",
+  "isa.donoso@bc3research.org"     = "Isa",
+  "nick.littlewood@sruc.ac.uk"     = "Nick",
+  "alvaro.moreno@bc3research.org"  = "Alvaro",
+  "enaut.martinezdebirgara@bc3research.org" = "Eñaut",
+  "nibedita.41282@gmail.com"       = "Nibu",
+  "i.ollard@jbs.cam.ac.uk"         = "Isobel",
+  "achristi@ic.ac.uk"              = "Alec"
+)
+
+# Function to calculate inter-reviewer agreement for full text screening
+# using a single .csv file with all screening decisions
+
+
+calc_full_text_agreement <- function(csv_file, reviewer_name) {
+  # Read in the file
+  df <- read_csv(csv_file, show_col_types = FALSE) %>%
+    filter(key == "included") %>%
+    # Recode emails to names, convert timestamps, and keep only the last decision
+    mutate(
+      user = recode(user_email, !!!email_lookup),
+      date_time = ymd_hms(created_at, tz = "UTC")
+    ) %>%
+    group_by(article_id, user) %>%
+    slice_max(date_time, n = 1) %>%  # Keep only latest decision per article/user
+    ungroup() %>%
+    mutate(
+      included = if_else(value == "0", "1", value)  # Reverse 0 to 1 for agreement
+    ) %>%
+    select(article_id, user, included) %>%
+    pivot_wider(names_from = user, values_from = included)
+  
+  # Ensure the necessary columns are present
+  required_cols <- c("Phil", reviewer_name)
+  if (!all(required_cols %in% names(df))) {
+    stop(glue::glue(
+      "One or both required columns ('Phil' and '{reviewer_name}') not found in the data frame.\n",
+      "Check if recoding worked and both reviewers have included values in this file."
+    ))
+  }
+  
+  # Filter to rows where both Phil and reviewer made a decision
+  df <- df %>% filter(!is.na(.data$Phil), !is.na(.data[[reviewer_name]]))
+  
+  # Convert included/excluded to numeric: 1 = included, -1 = excluded
+  df <- df %>%
+    mutate(
+      Phil = if_else(Phil == "1", 1, -1),
+      !!reviewer_name := if_else(.data[[reviewer_name]] == "1", 1, -1)
+    )
+  
+  # Calculate Cohen's kappa
+  kappa_data <- df %>% select(Phil, all_of(reviewer_name))
+  ck <- cohen.kappa(as.matrix(df %>% select(Phil, !!sym(reviewer_name))))
+  
+  # Summary stats
+  tibble(
+    reviewer       = reviewer_name,
+    kappa          = ck$kappa,
+    percent_agreement = 100 * mean(df$Phil == df[[reviewer_name]]),
+    n_comparisons  = ck$n.obs,
+    both_included  = sum(df$Phil == 1 & df[[reviewer_name]] == 1),
+    only_phil      = sum(df$Phil == 1 & df[[reviewer_name]] == -1),
+    only_other     = sum(df$Phil == -1 & df[[reviewer_name]] == 1),
+    both_excluded  = sum(df$Phil == -1 & df[[reviewer_name]] == -1)
+  )
+}
+
+#import csv with screening data
+screening_data<- read_csv("data/screening_agreement/screening_full_text_1.csv", show_col_types = FALSE)
+
+unique(screening_data$user_email)
+
+# List of reviewers and their corresponding files
+reviewers <- c(
+  Tiff      = "data/screening_agreement/screening_full_text_1.csv",
+  Prishnee  = "data/screening_agreement/screening_full_text_1.csv",
+  Sarah     = "data/screening_agreement/screening_full_text_1.csv",
+  Carlos    = "data/screening_agreement/screening_full_text_1.csv",
+  Fereshteh = "data/screening_agreement/screening_full_text_1.csv",
+  Tabitha   = "data/screening_agreement/screening_full_text_1.csv",
+  Alice   = "data/screening_agreement/screening_full_text_1.csv",
+  Alice   = "data/screening_agreement/screening_full_text_1.csv"
+)
+
+agreement_results_full_text <- map2(
+  .x = reviewers,
+  .y = names(reviewers),
+  .f = ~calc_full_text_agreement(csv_file = .x, reviewer_name = .y)
+) |> list_rbind()
+
+print(agreement_results_full_text)
