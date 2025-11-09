@@ -1,6 +1,6 @@
 category,subcategory,factor
-Nature of evidence,Existence of scientific information,Existence
-Nature of evidence,Accessibility,Accessibility
+Nature of evidence,Existence of scientific information,Existence of evidence
+Nature of evidence,Accessibility,Accessibility of evidence
 Nature of evidence,Accessibility,Format and language
 Nature of evidence,Accessibility,Time lag
 Nature of evidence,Accessibility,Quantity of information
@@ -12,24 +12,26 @@ Nature of evidence,"Quality, credibility and legitimacy of evidence",Uncertainty
 Nature of evidence,"Quality, credibility and legitimacy of evidence",Lack of uncertainty
 Nature of evidence,"Quality, credibility and legitimacy of evidence",Inconclusive
 Nature of evidence,"Quality, credibility and legitimacy of evidence",Source of evidence
-Research-practice links and relationships,Academic-practitioner links and relationships,Scientist-actor relationships
-Research-practice links and relationships,,Relationship between colleagues
+Nature of evidence,"Quality, credibility and legitimacy of evidence",Spatial/temporal scale of evidence
+Relationships,Academic-practitioner links and relationships,Scientist-actor relationships
+Relationships,Relationship between colleagues,Relationships between colleagues
 Decision context,Decision maker  ,Decision-maker characteristics
 Decision context,Nature of decision or issue  ,Nature of decision
 Decision context,"Social, political and economic context","Social, political, and economic context"
 Decision context,Implementation capacity,Implementation capacity
+Decision context,Implementation capacity,Timeliness of evidence
 Researcher and research organizations,Attitude towards research use,Researcher attitude towards evidence use
 Researcher and research organizations,Skills and awareness,Researcher skills and awareness
 Researcher and research organizations,Academic demands of researchers,Academic demands on researchers
 Researcher and research organizations,Culture of researchers ,Culture of researchers
-Practitioner,Attitude about research and research use,Practitioner or policymaker attitude towards evidence use
-Practitioner,Skills,Practitioner or policymaker research skills
-Practitioner,Personal characteristics,Practitioner/policymaker personal characteristics
-Practitioner,Management decision process and behavior,Practitioner or policymaker decision process
-Practitioner,Culture of practitioners ,Culture of practitioner or policymaker
-Practitioner,Awareness,Practitioner or policymaker awareness of evidence
+Practitioner/policymaker,Attitude about research and research use,Practitioner/policmaker attitude towards evidence use
+Practitioner/policymaker,Skills,Practitioner/policymaker research skills
+Practitioner/policymaker,Personal characteristics,Practitioner/policymaker personal characteristics
+Practitioner/policymaker,Management decision process and behavior,Practitioner/policymaker decision process
+Practitioner/policymaker,Culture of practitioners ,Culture of practitioner/policymakers
+Practitioner/policymaker,Awareness,Practitioner/policymaker awareness of evidence
 Management organization,"Capacity, resources and finance",Capacity and resources
 Management organization,"Organizational internal management, structure and process",Management
-Management organization,Organizational culture ,NA
-Characteristics of other stakeholders,"Stakeholders’ attitude, values and beliefs",Other stakeholders values and beliefs
-Characteristics of other stakeholders,Practitioner-stakeholder relationships,Practitioner or policymaker-stakeholder relationships
+Management organization,Organizational culture ,Organizational culture
+Characteristics of other stakeholders,"Stakeholders’ attitude, values and beliefs",Other stakeholder values and beliefs
+Relationships,Practitioner-stakeholder relationships,Practitioner/policymaker-stakeholder relationships
