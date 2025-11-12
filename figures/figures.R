@@ -4,19 +4,22 @@
 #first load packages
 pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
                countrycode,rnaturalearth,rnaturalearthdata,rcartocolor,
-               tidyr,UpSetR,ComplexUpset,ggplot2,BaseSet,ggh4x)
+               tidyr,UpSetR,ComplexUpset,ggplot2,BaseSet,ggh4x,tidytext,forcats)
 
 
 #load data
-sys_map_data<-read_csv("data/extracted_data_2025-11-03.csv")
-factor_categories<-read_csv("data/evidence_factor_categories.csv")
+sys_map_data<-read.csv("data/extracted_data_2025-11-03.csv")
+factor_categories<-read.csv("data/evidence_factor_categories.csv")
+articles<-read.csv("data/articles_2025_11_12.csv")
 
 #########################################################
 # 1- Tidy and clean data#################################
 #########################################################
 
 #convert all column names to lower case, replace spaces with underscores, and dashes with underscores
-colnames(sys_map_data)<-colnames(sys_map_data) %>% tolower() %>% str_replace_all(" ", "_")%>%str_replace_all("-", "_")
+colnames(sys_map_data) <- colnames(sys_map_data) %>%str_trim() %>%tolower() %>% str_replace_all("[ .\\/-]+", "_") %>%       
+  str_replace_all("_+", "_") %>%              
+  str_replace_all("^_|_$", "") 
 
 ########################################################
 #2 - Figure 1 - Study context###########################
@@ -427,7 +430,6 @@ ggsave("figures/figure_2_actors_organisations.png",
 
 n_studies<-nrow(sys_map_data)
 
-
 mentions_factors <- sys_map_data %>%
   select(rayyan_key, factors_influencing_evidence_use) %>%
   filter(!is.na(factors_influencing_evidence_use)) %>%
@@ -531,18 +533,24 @@ mentions_factors_categories <- mentions_factors_categories %>%
   #arrange in descending order of percentage mentions
   arrange(desc(perc_mentions))
 
+
+mentions_factors_categories%>%
+  print(n=100)
+
 #plot this
 mentions_factors_categories%>%
-  dplyr::filter(category!="Characteristics of other stakeholders")%>%
-  ggplot(aes(y = reorder(factors_label, perc_mentions), x = perc_mentions)) +
+  filter(category!="Characteristics of other stakeholders")%>%
+  mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
+  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
   geom_bar(stat="identity") +
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_bw()+
   facet_wrap(~category, scales = "free_y",ncol=1)+
   force_panelsizes(rows = c(0.3,1,1,0.3))+
-  theme(axis.text = element_text(size=10))
+  theme(axis.text = element_text(size=10))+
+  scale_y_reordered()
 
-ggsave("figures/figure_4_percentage_factors.png",
+ggsave("figures/figure_3_percentage_factors.png",
        width=15,
        height=20,
        units="cm",
@@ -642,6 +650,107 @@ ggplot(sys_biome_factors,aes(x=category,y=biome_std,fill=n_mentions))+
 
 #try by continent instead
 
+
+###################################################
+#figure 5 - Changes in factors studied over time###
+###################################################
+
+clean_factors_data<-sys_map_data %>%
+  select(rayyan_key, factors_influencing_evidence_use) %>%
+  filter(!is.na(factors_influencing_evidence_use)) %>%
+  # Protect the multi-comma phrase with a token that has no commas
+  mutate(factors_influencing_evidence_use =
+           str_replace_all(factors_influencing_evidence_use,
+                           fixed("Social, political, and economic context"),
+                           "SOC_POL_ECON__TOKEN")) %>%
+  # IMPORTANT: separate_longer_delim uses a literal delimiter (not regex)
+  separate_longer_delim(factors_influencing_evidence_use, delim = ",") %>%
+  mutate(
+    # trim whitespace
+    factors_influencing_evidence_use = str_trim(factors_influencing_evidence_use),
+    # drop empty fragments that can appear from ",," etc.
+    factors_influencing_evidence_use = na_if(factors_influencing_evidence_use, ""),
+    # Restore the protected phrase
+    factors_influencing_evidence_use =
+      str_replace_all(factors_influencing_evidence_use,
+                      fixed("SOC_POL_ECON__TOKEN"),
+                      "Social, political, and economic context"),
+    # Rename "Scale"
+    factors_influencing_evidence_use =
+      str_replace(factors_influencing_evidence_use,
+                  regex("^Scale$", ignore_case = TRUE),
+                  "Spatial/temporal scale of evidence"),
+    # Rename "Timelieness of evidence"
+    factors_influencing_evidence_use =
+      str_replace(factors_influencing_evidence_use,
+                  regex("^Timelieness of evidence$", ignore_case = TRUE),
+                  "Timeliness of evidence"),
+    # Rename "Characteristics"
+    factors_influencing_evidence_use =
+      str_replace(factors_influencing_evidence_use,
+                  regex("^Decision-maker characteristics$", ignore_case = TRUE),
+                  "Practitioner/policymaker personal characteristics"))%>%
+  filter(!is.na(factors_influencing_evidence_use))%>%
+  left_join(factor_categories, by = c("factors_influencing_evidence_use" = "factor"))%>%
+  mutate(
+    category = fct_recode(
+      as_factor(category),
+      
+      # --- Merge + rename practitioner/policymaker & decision context ---
+      "Decision-maker characteristics,\norganisations, and decisions" = "Practitioner/policymaker",
+      "Decision-maker characteristics,\norganisations, and decisions" = "Management organization",
+      "Decision-maker characteristics,\norganisations, and decisions" = "Decision context",
+      
+      # --- Standardise researcher label ---
+      "Researcher &\nresearch organisations" = "Researcher and research organizations",
+      
+      # --- Rename evidence facet ---
+      "Characteristics of evidence" = "Nature of evidence"
+    ))
+
+#now link this data to bibliographic data to get publication year
+clean_factors_data_studies<-clean_factors_data%>%
+  left_join(articles,by="rayyan_key",keep=FALSE)%>%
+  #only keep ID, factors, and year
+  select(rayyan_key,factors_influencing_evidence_use,category,year)
+
+#now count the number of studies per category per year
+unique(factors_over_time$category)
+
+factors_over_time <- clean_factors_data_studies %>%
+  filter(category != "Characteristics of other stakeholders") %>%
+  mutate(category = fct_drop(category)) %>%
+  group_by(year, category) %>%
+  summarise(n_studies = n_distinct(rayyan_key), .groups = "drop") %>%
+  complete(
+    year = full_seq(range(year, na.rm = TRUE), 1),
+    category = unique(category),
+    fill = list(n_studies = 0)
+  ) %>%
+  arrange(year, category)
+
+#now plot this as line plot
+ggplot(factors_over_time,aes(x=year,y=n_studies,colour=category))+
+  geom_line(size=1,alpha=0.5)+
+  geom_point(size=3,alpha=0.5)+
+  theme_cowplot()+
+  labs(x="Publication year",y="Number of studies")+
+  scale_colour_carto_d(palette = "ag_Sunset",name="Factor category")+
+  scale_x_continuous(limits = c(min(factors_over_time$year),
+                                  max(factors_over_time$year)+1))+
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        legend.text=element_text(size=10),
+        legend.title=element_text(size=12),
+        legend.position = "bottom")+
+  guides(colour=guide_legend(nrow=2,byrow=TRUE))
+
+#save figure
+ggsave("figures/figure_4_factors_over_time.png",
+       width=16,
+       height=12,
+       units="cm",
+       dpi=300)
 
 
 ##################################################
