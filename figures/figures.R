@@ -89,7 +89,7 @@ sys_biome_subset <- sys_map_data %>%
     biome = str_trim(biome),
     biome_std = case_when(
       str_detect(biome, regex("Agricultur|Mangrove|Mountains?|Floodplains?|Terrestrial ecosystems|Grassland|
-                              Shrubland|Desert|Coastal",
+                              Shrubland|Desert|Coastal|Shrubland",
                               ignore_case = TRUE)) ~ "Other",
       str_detect(biome,regex("Not mentioned",ignore_case = TRUE)) ~ "Not reported",
       TRUE ~ biome
@@ -418,7 +418,7 @@ ggsave("figures/figure_2_actors_organisations.png",
        dpi=300)
 
 ########################################################################
-##Figure 4 - Factors influencing evidence use###########################
+##Figure 3 - Factors influencing evidence use###########################
 ########################################################################
 
 ############################################
@@ -549,14 +549,104 @@ ggsave("figures/figure_4_percentage_factors.png",
        dpi=300)
 
 
+########################################################
+#figure 4 - heatmaps of factors by biomes and continent#
+########################################################
+
+#first by biome
+#join factor mentions to biome data
+sys_biome_factors <- sys_map_data %>%
+  select(rayyan_key, biome, factors_influencing_evidence_use) %>%
+  filter(!is.na(biome), !is.na(factors_influencing_evidence_use)) %>%
+  # Protect the multi-comma phrase with a token that has no commas
+  mutate(factors_influencing_evidence_use =
+           str_replace_all(factors_influencing_evidence_use,
+                           fixed("Social, political, and economic context"),
+                           "SOC_POL_ECON__TOKEN")) %>%
+  # IMPORTANT: separate_longer_delim uses a literal delimiter (not regex)
+  separate_longer_delim(factors_influencing_evidence_use, delim = ",") %>%
+  mutate(
+    # trim whitespace
+    factors_influencing_evidence_use = str_trim(factors_influencing_evidence_use),
+    # drop empty fragments that can appear from ",," etc.
+    factors_influencing_evidence_use = na_if(factors_influencing_evidence_use, ""),
+    # Restore the protected phrase
+    factors_influencing_evidence_use =
+      str_replace_all(factors_influencing_evidence_use,
+                      fixed("SOC_POL_ECON__TOKEN"),
+                      "Social, political, and economic context"),
+    # Rename "Scale"
+    factors_influencing_evidence_use =
+      str_replace(factors_influencing_evidence_use,
+                  regex("^Scale$", ignore_case = TRUE),
+                  "Spatial/temporal scale of evidence"),
+    # Rename "Timelieness of evidence"
+    factors_influencing_evidence_use =
+      str_replace(factors_influencing_evidence_use,
+                  regex("^Timelieness of evidence$", ignore_case = TRUE),
+                  "Timeliness of evidence"),
+    # Rename "Characteristics"
+    factors_influencing_evidence_use =
+      str_replace(factors_influencing_evidence_use,
+                  regex("^Decision-maker characteristics$", ignore_case = TRUE),
+                  "Practitioner/policymaker personal characteristics"))%>%
+  filter(!is.na(factors_influencing_evidence_use))%>%
+  left_join(factor_categories, by = c("factors_influencing_evidence_use" = "factor"))%>%
+  filter(!is.na(biome), biome != "") %>%
+  separate_rows(biome, sep = ",\\s*") %>%
+  mutate(
+    biome = str_trim(biome),
+    biome_std = case_when(
+      str_detect(biome, regex("Agricultur|Mangrove|Mountains?|Floodplains?|Terrestrial ecosystems|Grassland|
+                              Shrubland|Desert|Coastal|Shrubland",
+                              ignore_case = TRUE)) ~ "Other",
+      str_detect(biome,regex("Not mentioned",ignore_case = TRUE)) ~ "Not reported",
+      TRUE ~ biome
+    )
+  ) %>%
+  group_by(biome_std, category) %>%
+  summarise(n_mentions = n(), .groups = "drop") %>%
+  arrange(biome_std, category)%>%
+  #filter out biomes "Not reported" and "Other"
+  filter(biome_std!="Not reported",
+         biome_std!="Other")%>%
+  mutate(
+    category = fct_recode(
+      as_factor(category),
+      
+      # --- Merge + rename practitioner/policymaker & decision context ---
+      "Decision-maker characteristics,\norganisations, and decisions" = "Practitioner/policymaker",
+      "Decision-maker characteristics,\norganisations, and decisions" = "Management organization",
+      "Decision-maker characteristics,\norganisations, and decisions" = "Decision context",
+      
+      # --- Standardise researcher label ---
+      "Researcher &\nresearch organisations" = "Researcher and research organizations",
+      
+      # --- Rename evidence facet ---
+      "Characteristics of evidence" = "Nature of evidence"
+    ))
+
+unique(sys_biome_factors$biome_std)
+
+#now plot this as a heatmap
+ggplot(sys_biome_factors,aes(x=category,y=biome_std,fill=n_mentions))+
+  geom_tile(colour="white")+
+  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
+  theme_cowplot()+
+  labs(x="Factor category",y="Biome")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=14))
+
+#this is not interesting! Biomes have similar patterns of factors mentioned
+
+#try by continent instead
+
+
 
 ##################################################
 #Supplementary figures############################
 ##################################################
-
-##############################################################################
-#Figure 3 - Types of scientific evidence considered###########################
-##############################################################################
 
 #figure S1 - bar chart with types of scientific evidence considered
 #calculate percentage of studies per type of scientific evidence considered
