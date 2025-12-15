@@ -4,7 +4,8 @@
 #first load packages
 pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
                countrycode,rnaturalearth,rnaturalearthdata,rcartocolor,
-               tidyr,UpSetR,ComplexUpset,ggplot2,BaseSet,ggh4x,tidytext,forcats)
+               tidyr,UpSetR,ComplexUpset,ggplot2,BaseSet,ggh4x,
+               tidytext,forcats)
 
 
 #load data
@@ -221,6 +222,53 @@ ggsave("figures/figure_1_study_context.png",
        dpi=300)
 
 
+#save figures for BES talk
+
+#plot map
+location_plot_presentation<-ggplot(world_map_join,aes(fill=n_studies))+
+  geom_sf(colour="grey70",linewidth=0.5)+
+  theme_void()+
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks=element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "bottom",
+        legend.key.width = unit(2,"cm"),
+        legend.key.height = unit(0.25,"cm"),
+        legend.text=element_text(size=20),
+        legend.title=element_text(size=20))+
+  coord_sf(xlim = c(-180,180),ylim=c(-55,85),expand = FALSE)+
+  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25))
+
+#save figure
+ggsave("figures/for_talk/study_country.png",
+       plot=location_plot_presentation,
+       width=30,
+       height=16,
+       units="cm",
+       dpi=300)
+
+#plot biome data
+biome_plot_presentation<-
+  ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),
+                              y=perc_studies,fill=perc_studies))+
+  geom_bar(stat="identity")+
+  theme_cowplot()+
+  coord_flip()+
+  labs(x="Biome",y="Percentage of studies (%)")+
+  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
+  theme(legend.position = "none",
+        axis.text=element_text(size=20),
+        axis.title=element_text(size=20))
+
+#save figure
+ggsave("figures/for_talk/study_biome.png",
+       plot=biome_plot_presentation,
+       width=30,
+       height=16,
+       units="cm",
+       dpi=300)
 
 #################################################################
 #Figure 2 - Actors and organisations#############################
@@ -420,6 +468,53 @@ ggsave("figures/figure_2_actors_organisations.png",
        units="cm",
        dpi=300)
 
+
+#save plots for BES presentation
+
+#first actors
+actors_upset_presentation<-upset(sys_actor_subset_bool, actors, name='Actor type', width_ratio=0.1,
+                                 # with manual aes specification:
+                                 base_annotations=list('Number of studies'=(intersection_size(counts=FALSE))),
+                                 set_sizes=FALSE)+
+  theme(text=element_text(size=20),
+        axis.text=element_text(size=20),
+        axis.title=element_text(size=20),
+        axis.title.y=element_text(size=20))
+
+actors_upset_presentation
+
+ggsave("figures/for_talk/study_actors.png",
+       actors_upset_presentation,
+       width=20,
+       height=15,
+       units="cm",
+       dpi=300)
+
+
+#then organisations
+organisation_upset_presentation<-upset(Organisation_matrix_bool, organisations, name='Organisation type', width_ratio=0.1,
+                                       base_annotations=list('Number of studies'=(intersection_size(counts=FALSE))),
+                                       set_sizes=FALSE,
+                                       labeller=ggplot2::as_labeller(c(
+                                         'Government_statutory_body'='Government/statutory body',
+                                         'NGO_non_profit'='NGO/non profit',
+                                         'Academic_institution'='Academic institution',
+                                         'Community_local_organisation'='Community/local organisation',
+                                         "Private_sector"='Private sector'
+                                       )))+theme(text=element_text(size=20),
+                                                 axis.text=element_text(size=20),
+                                                 axis.title=element_text(size=20),
+                                                 axis.title.y=element_text(size=20))
+
+organisation_upset_presentation
+
+ggsave("figures/for_talk/study_organisations.png",
+       organisation_upset_presentation,
+       width=30,
+       height=15,
+       units="cm",
+       dpi=300)
+
 ########################################################################
 ##Figure 3 - Factors influencing evidence use###########################
 ########################################################################
@@ -520,9 +615,9 @@ mentions_factors_categories <- mentions_factors_categories %>%
       as_factor(category),
       
       # --- Merge + rename practitioner/policymaker & decision context ---
-      "Decision-maker characteristics,\norganisations, and decisions" = "Practitioner/policymaker",
-      "Decision-maker characteristics,\norganisations, and decisions" = "Management organization",
-      "Decision-maker characteristics,\norganisations, and decisions" = "Decision context",
+      "Practitioner/policymaker characteristics,\norganisation, and decisions" = "Practitioner/policymaker",
+      "Practitioner/policymaker characteristics,\norganisation, and decisions" = "Management organization",
+      "Practitioner/policymaker characteristics,\norganisation, and decisions" = "Decision context",
       
       # --- Standardise researcher label ---
       "Researcher &\nresearch organisations" = "Researcher and research organizations",
@@ -550,12 +645,129 @@ mentions_factors_categories%>%
   theme(axis.text = element_text(size=10))+
   scale_y_reordered()
 
-ggsave("figures/figure_3_percentage_factors.png",
-       width=15,
-       height=20,
+#just plot relationships category
+relationship_plot<-mentions_factors_categories%>%
+  filter(category!="Characteristics of other stakeholders")%>%
+  filter(category=="Relationships")%>%
+  mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
+  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  geom_bar(stat="identity",fill="#FA7876",alpha=0.8) +
+  labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
+  theme_cowplot()+
+  theme(axis.text = element_text(size=10))+
+  scale_y_reordered()
+
+#just plot evidence category
+evidence_plot<-mentions_factors_categories%>%
+  filter(category!="Characteristics of other stakeholders")%>%
+  filter(category=="Characteristics of evidence")%>%
+  mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
+  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  geom_bar(stat="identity",fill="#4B2991",alpha=0.8) +
+  labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
+  theme_cowplot()+
+  theme(axis.text = element_text(size=10))+
+  scale_y_reordered()
+
+#just plot decision-makers category
+actor_plot<-mentions_factors_categories%>%
+  filter(category!="Characteristics of other stakeholders")%>%
+  filter(category=="Practitioner/policymaker characteristics,\norganisation, and decisions")%>%
+  mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
+  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  geom_bar(stat="identity",fill="#C0369D",alpha=0.8) +
+  labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
+  theme_cowplot()+
+  theme(axis.text = element_text(size=10))+
+  scale_y_reordered()
+
+#just plot researcher category
+researcher_plot<-mentions_factors_categories%>%
+  filter(category!="Characteristics of other stakeholders")%>%
+  filter(category=="Researcher &\nresearch organisations")%>%
+  mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
+  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  geom_bar(stat="identity",fill="#EDD9A3",alpha=0.8)+
+  labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
+  theme_cowplot()+
+  theme(axis.text = element_text(size=10))+
+  scale_y_reordered()
+
+#combine these plots into figure 3
+plot_grid(actor_plot,evidence_plot,researcher_plot, relationship_plot,
+          ncol=2,labels=c("a)","b)","c)","d)"),label_size = 10)
+
+#plot figures for BES presentation
+
+#first relationships
+relationship_plot_presentation<-relationship_plot+
+  facet_wrap(~category)+
+  theme(text=element_text(size=20),
+        axis.text = element_text(size=18),
+        axis.title = element_text(size=22,face="bold"),
+        strip.text = element_text(size=28,face="bold"),
+        strip.background = element_rect(fill="lightgrey"))+
+  scale_x_continuous(limits=c(0,50))
+
+ggsave("figures/for_talk/relationships.png",
+       relationship_plot_presentation,
+       width=30,
+       height=15,
        units="cm",
        dpi=300)
 
+#now evidence characteristics
+evidence_plot_presentation<-evidence_plot+
+  facet_wrap(~category)+
+  theme(text=element_text(size=20),
+        axis.text = element_text(size=18),
+        axis.title = element_text(size=22,face="bold"),
+        strip.text = element_text(size=28,face="bold"),
+        strip.background = element_rect(fill="lightgrey"))+
+  scale_x_continuous(limits=c(0,50))
+
+ggsave("figures/for_talk/evidence_characteristics.png",
+       evidence_plot_presentation,
+       width=30,
+       height=15,
+       units="cm",
+       dpi=300)
+
+#now practitioners and organisations
+actor_plot_presentation<-actor_plot+
+  facet_wrap(~category)+
+  theme(text=element_text(size=20),
+        axis.text = element_text(size=18),
+        axis.title = element_text(size=22,face="bold"),
+        strip.text = element_text(size=28,face="bold"),
+        strip.background = element_rect(fill="lightgrey"))+
+  scale_x_continuous(limits=c(0,50))
+
+ggsave("figures/for_talk/actor_characteristics.png",
+       actor_plot_presentation,
+       width=31,
+       height=16,
+       units="cm",
+       dpi=300)
+
+
+#now researcher and research organisations
+researcher_plot_presentation<-researcher_plot+
+  facet_wrap(~category)+
+  theme(text=element_text(size=20),
+        axis.text = element_text(size=18),
+        axis.title = element_text(size=22,face="bold"),
+        strip.text = element_text(size=28,face="bold"),
+        strip.background = element_rect(fill="lightgrey"))+
+  scale_x_continuous(limits=c(0,50))
+
+
+ggsave("figures/for_talk/researcher_characteristics.png",
+       researcher_plot_presentation,
+       width=30,
+       height=16,
+       units="cm",
+       dpi=300)
 
 ########################################################
 #figure 4 - heatmaps of factors by biomes and continent#
@@ -737,7 +949,7 @@ ggplot(factors_over_time,aes(x=year,y=n_studies,colour=category))+
   labs(x="Publication year",y="Number of studies")+
   scale_colour_carto_d(palette = "ag_Sunset",name="Factor category")+
   scale_x_continuous(limits = c(min(factors_over_time$year),
-                                  max(factors_over_time$year)+1))+
+                                max(factors_over_time$year)+1))+
   theme(axis.text=element_text(size=10),
         axis.title=element_text(size=12),
         legend.text=element_text(size=10),
@@ -752,6 +964,27 @@ ggsave("figures/figure_4_factors_over_time.png",
        units="cm",
        dpi=300)
 
+#do the same figure but with cumulative number of studies over years
+factors_over_time_cum <- factors_over_time %>%
+  group_by(category) %>%
+  arrange(year) %>%
+  mutate(cum_studies = cumsum(n_studies)) %>%
+  ungroup()
+#plot this
+ggplot(factors_over_time_cum,aes(x=year,y=cum_studies,colour=category))+
+  geom_line(size=1,alpha=0.5)+
+  geom_point(size=3,alpha=0.5)+
+  theme_cowplot()+
+  labs(x="Publication year",y="Cumulative number of studies")+
+  scale_colour_carto_d(palette = "ag_Sunset",name="Factor category")+
+  scale_x_continuous(limits = c(min(factors_over_time_cum$year),
+                                max(factors_over_time_cum$year)+1))+
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        legend.text=element_text(size=10),
+        legend.title=element_text(size=12),
+        legend.position = "bottom")+
+  guides(colour=guide_legend(nrow=2,byrow=TRUE))
 
 ##################################################
 #Supplementary figures############################
@@ -845,3 +1078,47 @@ ggplot(factors_per_study,aes(x=n_factors))+
        y="Number of studies")+
   scale_x_continuous(breaks=seq(0,15,1))
 
+##############################################
+#extra figures for bes talk###################
+##############################################
+
+
+#load data from bluesky polls
+aim_poll<-read.csv("data/bluesky_poll_1.csv")
+practice_poll<-read.csv("data/bluesky_poll_2.csv")
+head(practice_poll)
+
+#plot this data as barplots
+#keeping order of responses the same as in dataframe
+
+
+ggplot(aim_poll,aes(y = fct_rev(Response), x = Perc)) +
+  geom_bar(stat="identity",fill="#1184fd",alpha=0.8) +
+  labs(y = "Response", x = "Pecentage of respondants") +
+  theme_cowplot()+
+  theme(axis.text = element_text(size=20),
+        axis.title = element_text(size=22,face="bold"))
+
+ggsave("figures/for_talk/bluesky_1.png",
+       width=30,
+       height=16,
+       units="cm",
+       dpi=300)
+
+#do the same for the data on evidence use
+practice_poll%>%
+  mutate(Response=as.factor(Response),
+         Response=fct_relevel(Response,"Yes","No","Maybe"))%>%
+           ggplot(aes(y = fct_rev(Response), x = Perc)) +
+           geom_bar(stat="identity",fill="#1184fd",alpha=0.8) +
+           labs(y = "Response", x = "Pecentage of respondants") +
+           theme_cowplot()+
+           theme(axis.text = element_text(size=20),
+                 axis.title = element_text(size=22,face="bold"))
+
+ggsave("figures/for_talk/bluesky_2.png",
+       width=30,
+       height=16,
+       units="cm",
+       dpi=300)
+         
