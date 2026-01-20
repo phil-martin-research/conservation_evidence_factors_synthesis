@@ -5,11 +5,10 @@
 pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
                countrycode,rnaturalearth,rnaturalearthdata,rcartocolor,
                tidyr,UpSetR,ComplexUpset,ggplot2,BaseSet,ggh4x,
-               tidytext,forcats)
-
+               tidytext,forcats,grid,gridExtra,grateful)
 
 #load data
-sys_map_data<-read.csv("data/extracted_data_2025-11-03.csv")
+sys_map_data<-read.csv("data/extracted_data_2026_01_20.csv")
 factor_categories<-read.csv("data/evidence_factor_categories.csv")
 articles<-read.csv("data/articles_2025_11_12.csv")
 
@@ -41,7 +40,10 @@ sys_location_subset<-sys_map_data%>%separate_rows(location, sep = ",\\s*")%>%
          location!="Oceania",
          location!="South America",
          location!="Not details",
-         location!="South-East Asia")
+         location!="South-East Asia")%>%
+  #remove any white space from location names
+  mutate(location=str_trim(location))
+
 
 #count number of studies per location
 sys_location_subset<-sys_location_subset%>%
@@ -50,7 +52,25 @@ sys_location_subset<-sys_location_subset%>%
   ungroup()
 
 sys_location_subset%>%
+  #order by number of studies
+  arrange(desc(n_studies))%>%
+  #calculate percentage of studies per location
+  mutate(perc_studies=(n_studies/nrow(sys_map_data))*100)%>%
   print(n=120)
+
+#identify the continent each country is in - need to fix this so that 
+#study identity is taken into account
+sys_location_subset %>%
+  mutate(
+    continent = countrycode(location, "country.name", "continent",
+                            warn = TRUE) %>%
+      dplyr::coalesce(countrycode(location, "country.name.en", "continent", warn = TRUE))
+  ) %>%
+  arrange(desc(n_studies)) %>%
+  mutate(perc_studies = 100 * n_studies / nrow(sys_map_data)) %>%
+  group_by(continent) %>%
+  summarise(n_studies = sum(n_studies),
+            perc_studies = sum(perc_studies))
 
 #add ISO3 country name
 sys_location_subset$iso_a3_eh<-countrycode(sys_location_subset$location,origin = "country.name",destination = "iso3c")
@@ -77,7 +97,7 @@ location_plot<-ggplot(world_map_join,aes(fill=n_studies))+
         legend.text=element_text(size=12),
         legend.title=element_text(size=12))+
   coord_sf(xlim = c(-180,180),ylim=c(-55,85),expand = FALSE)+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25))
+  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25,30,35,40))
 
 #figure 1b - bar chart of biomes in which studies were done
 #count percentage of studies per biome
@@ -89,19 +109,24 @@ no_studies<-nrow(sys_map_data%>%filter(!is.na(biome)))
 sys_biome_subset <- sys_map_data %>%
   filter(!is.na(biome), biome != "") %>%
   separate_rows(biome, sep = ",\\s*") %>%
-  mutate(
-    biome = str_trim(biome),
-    biome_std = case_when(
-      str_detect(biome, regex("Agricultur|Mangrove|Mountains?|Floodplains?|Terrestrial ecosystems|Grassland|
-                              Shrubland|Desert|Coastal|Shrubland",
-                              ignore_case = TRUE)) ~ "Other",
-      str_detect(biome,regex("Not mentioned",ignore_case = TRUE)) ~ "Not reported",
+  mutate(biome = str_trim(biome),biome_std = case_when(
+      #Agroecosystems
+      str_detect(biome,regex("agricultur|agro ?ecosystems?", ignore_case = TRUE)) ~ "Agroecosystem",
+      # Not reported
+      str_detect(biome,regex("not mentioned|not reported", ignore_case = TRUE)) ~ "Not reported",
+      #Other
+      str_detect(biome,regex("mangroves?|mountains?|floodplains?|terrestrial ecosystems|grasslands?|shrublands?|deserts?|coastal|polar regions?|peatlands?",
+          ignore_case = TRUE)) ~ "Other",
       TRUE ~ biome
     )
   ) %>%
   group_by(biome_std) %>%
-  summarise(perc_studies = (n() / no_studies) * 100, .groups = "drop") %>%
+  summarise(
+    perc_studies = (n() / no_studies) * 100,
+    .groups = "drop"
+  ) %>%
   arrange(desc(perc_studies))
+
 
 #plot biome data
 biome_plot<-ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),y=perc_studies))+
@@ -117,8 +142,6 @@ biome_plot<-ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),y=perc
 
 #calculate percentage of studies per conservation problem
 
-#this data needs tidying before it can be plotted - separate out multiple problems in one row and standardise names
-
 sys_map_data%>%
   filter(!is.na(conservation_problem))%>%
   separate_rows(conservation_problem, sep = ",\\s*")%>%
@@ -128,32 +151,6 @@ sys_map_data%>%
 
 
 #reclassify categories
-sys_map_data%>%
-  filter(!is.na(conservation_problem))%>%
-  separate_rows(conservation_problem, sep = ",\\s*")%>%
-  mutate(conservation_problem = str_trim(conservation_problem),
-         conservation_problem_std = case_when(
-           str_detect(conservation_problem, regex("land-use change", ignore_case = TRUE)) ~ "Land use change",
-           conservation_problem %in% c("habitat degradation", "Forest restoration",
-                                       "Agriculture impacts","Marine spatial planning",
-                                       "Urbanisation","Restoration","Ecosystem restoration") ~ "Land use change",
-           conservation_problem %in% c("Sustainable shark fisheries", "Overfishing",) ~ "Overexploitation",
-           conservation_problem %in% c("climate change") ~ "Climate change",
-           conservation_problem %in% c("Protected area managment","wetland conservation") ~ "Not reported",
-           conservation_problem %in% c("Eutrophication") ~ "Pollution",
-           conservation_problem %in% c("Assessment of conservation status","Plant reintroduction",
-                                       "Water use","Human-wildlife conflict","Fire",
-                                       "Identification of vulnerable ecosystems","Predation of birds",
-                                       "Pest control","Forest managment","Protected area designation",                 
-                                       "Protected areas management","Natural resource management",
-                                       "Endangered species managemnt","GMOs","Biodiversity proected",
-                                       "Development of decision-support tools"  ) ~ "Other",
-           TRUE ~ conservation_problem))%>%
-  group_by(conservation_problem_std)%>%
-  summarise(perc_studies=(n()/no_studies)*100)%>%
-  ungroup()%>%
-  arrange(desc(perc_studies))
-
 out <- sys_map_data %>%
   separate_rows(conservation_problem, sep = ",\\s*") %>%
   filter(!is.na(conservation_problem), conservation_problem != "") %>%
@@ -163,7 +160,7 @@ out <- sys_map_data %>%
       str_detect(conservation_problem, regex("land[- ]?use change", ignore_case = TRUE)) ~ "Land use change",
       str_to_lower(conservation_problem) %in% str_to_lower(c(
         "habitat degradation","Forest restoration","Agriculture impacts","Marine spatial planning",
-        "Urbanisation","Restoration","Ecosystem restoration"
+        "Urbanisation","Restoration","Ecosystem restoration","Infrastructure"
       )) ~ "Land use change",
       str_to_lower(conservation_problem) %in% str_to_lower(c(
         "Sustainable shark fisheries","Overfishing"
@@ -177,7 +174,7 @@ out <- sys_map_data %>%
                                                              "Forest managment","Protected area designation","Protected areas management",
                                                              "Natural resource management","Endangered species managemnt",
                                                              "Biodiversity proected","Development of decision-support tools",
-                                                             "Protected area management"
+                                                             "Protected area management","River management","River regulation"
       )) ~ "Not reported",
       str_to_lower(conservation_problem) %in% str_to_lower(c("Eutrophication")) ~ "Pollution",
       
@@ -478,8 +475,7 @@ actors_upset_presentation<-upset(sys_actor_subset_bool, actors, name='Actor type
                                  set_sizes=FALSE)+
   theme(text=element_text(size=20),
         axis.text=element_text(size=20),
-        axis.title=element_text(size=20),
-        axis.title.y=element_text(size=20))
+        axis.title=element_text(size=20))
 
 actors_upset_presentation
 
@@ -512,6 +508,76 @@ ggsave("figures/for_talk/study_organisations.png",
        organisation_upset_presentation,
        width=30,
        height=15,
+       units="cm",
+       dpi=300)
+
+
+#basic actors plot for use in BES presentation
+#just a bar plot rather than an upset plot
+actor_counts <- sys_actor_subset %>%
+  select(-rayyan_key) %>%
+  summarise(across(everything(), sum)) %>%
+  #calculate percentage of studies for each category
+  mutate(across(everything(), ~ .x / nrow(sys_actor_subset) * 100)) %>%
+  pivot_longer(everything(), names_to = "actor_type", values_to = "n_studies") %>%
+  arrange(desc(n_studies))
+
+#plot the results in a bar chart
+actor_bar_plot<-ggplot(actor_counts,aes(x=reorder(actor_type,-n_studies),y=n_studies,fill=n_studies))+
+  geom_bar(stat="identity")+
+  theme_cowplot()+
+  labs(x="Actor type",y="Percentage of studies (%)")+
+  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
+  theme(legend.position = "none",
+        axis.text=element_text(size=20),
+        axis.title=element_text(size=24,face="bold"))
+
+#save plot
+ggsave("figures/for_talk/study_actors_barplot.png",
+       actor_bar_plot,
+       width=30,
+       height=16,
+       units="cm",
+       dpi=300)
+
+#now do the same for organisations
+organisation_counts <- Organisation_matrix %>%
+  select(-rayyan_key) %>%
+  summarise(across(everything(), sum)) %>%
+  #calculate percentage of studies for each category
+  mutate(across(everything(), ~ .x / nrow(Organisation_matrix) * 100)) %>%
+  pivot_longer(everything(), names_to = "organisation_type", values_to = "n_studies") %>%
+  #remove underscores from organisation type labels
+  mutate(organisation_type=gsub("_", " ", organisation_type))%>%
+  #merge Community local organisation, not detailed, 
+  #Intergovernmental organisation and research funders into other
+  mutate(organisation_type=fct_recode(organisation_type, 
+                                      Other = "Community local organisation",
+                                      Other = "Not detailed",
+                                      Other = "Intergovernmental organisation",
+                                      Other= "Research funders"))%>%
+  group_by(organisation_type)%>%
+  summarise(perc_studies=sum(n_studies))%>%
+  arrange(desc(perc_studies))
+
+
+#plot the results in a bar chart
+#first replace underscores in organisation type labels
+
+ggplot(organisation_counts,aes(x=reorder(organisation_type,perc_studies),y=perc_studies,fill=perc_studies))+
+  geom_bar(stat="identity")+
+  theme_cowplot()+
+  coord_flip()+
+  labs(x="Organisation type",y="Percentage of studies (%)")+
+  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
+  theme(legend.position = "none",
+        axis.text=element_text(size=20),
+        axis.title=element_text(size=24,face="bold"))
+
+#save plot
+ggsave("figures/for_talk/study_organisations_barplot.png",
+       width=30,
+       height=16,
        units="cm",
        dpi=300)
 
@@ -654,8 +720,10 @@ relationship_plot<-mentions_factors_categories%>%
   geom_bar(stat="identity",fill="#FA7876",alpha=0.8) +
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
-  theme(axis.text = element_text(size=10))+
-  scale_y_reordered()
+  theme(axis.text = element_text(size=10),
+        axis.title=element_blank())+
+  scale_y_reordered()+
+  scale_x_continuous(limits=c(0,50))
 
 #just plot evidence category
 evidence_plot<-mentions_factors_categories%>%
@@ -666,8 +734,10 @@ evidence_plot<-mentions_factors_categories%>%
   geom_bar(stat="identity",fill="#4B2991",alpha=0.8) +
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
-  theme(axis.text = element_text(size=10))+
-  scale_y_reordered()
+  theme(axis.text = element_text(size=10),
+        axis.title=element_blank())+
+  scale_y_reordered()+
+  scale_x_continuous(limits=c(0,50))
 
 #just plot decision-makers category
 actor_plot<-mentions_factors_categories%>%
@@ -678,8 +748,10 @@ actor_plot<-mentions_factors_categories%>%
   geom_bar(stat="identity",fill="#C0369D",alpha=0.8) +
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
-  theme(axis.text = element_text(size=10))+
-  scale_y_reordered()
+  theme(axis.text = element_text(size=10),
+        axis.title=element_blank())+
+  scale_y_reordered()+
+  scale_x_continuous(limits=c(0,50))
 
 #just plot researcher category
 researcher_plot<-mentions_factors_categories%>%
@@ -690,12 +762,36 @@ researcher_plot<-mentions_factors_categories%>%
   geom_bar(stat="identity",fill="#EDD9A3",alpha=0.8)+
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
-  theme(axis.text = element_text(size=10))+
-  scale_y_reordered()
+  theme(axis.text = element_text(size=10),
+        axis.title=element_blank())+
+  scale_y_reordered()+
+  scale_x_continuous(limits=c(0,50))
 
 #combine these plots into figure 3
-plot_grid(actor_plot,evidence_plot,researcher_plot, relationship_plot,
-          ncol=2,labels=c("a)","b)","c)","d)"),label_size = 10)
+combined_factor_plot<-plot_grid(actor_plot,evidence_plot,researcher_plot, relationship_plot,
+          ncol=2,labels=c("a)","b)","c)","d)"),label_size = 10,align = "v",
+          rel_heights = c(1,0.4))
+
+#create common x and y labels
+
+y.grob <- textGrob("Factor impacting evidence use", 
+                   gp=gpar(fontface="bold",fontsize=12), rot=90)
+
+x.grob <- textGrob("Pecentage of studies mentioning factor", 
+                   gp=gpar(fontface="bold", fontsize=12))
+
+#add to plot
+
+grid.arrange(arrangeGrob(combined_factor_plot, 
+                         left = y.grob, bottom = x.grob))
+
+?arrangeGrob
+
+ggsave("figures/figure_3_factors_coloured.png",
+       width=20,
+       height=18,
+       units="cm",
+       dpi=300)
 
 #plot figures for BES presentation
 
@@ -1109,16 +1205,15 @@ ggsave("figures/for_talk/bluesky_1.png",
 practice_poll%>%
   mutate(Response=as.factor(Response),
          Response=fct_relevel(Response,"Yes","No","Maybe"))%>%
-           ggplot(aes(y = fct_rev(Response), x = Perc)) +
-           geom_bar(stat="identity",fill="#1184fd",alpha=0.8) +
-           labs(y = "Response", x = "Pecentage of respondants") +
-           theme_cowplot()+
-           theme(axis.text = element_text(size=20),
-                 axis.title = element_text(size=22,face="bold"))
+  ggplot(aes(y = fct_rev(Response), x = Perc)) +
+  geom_bar(stat="identity",fill="#1184fd",alpha=0.8) +
+  labs(y = "Response", x = "Pecentage of respondants") +
+  theme_cowplot()+
+  theme(axis.text = element_text(size=20),
+        axis.title = element_text(size=22,face="bold"))
 
 ggsave("figures/for_talk/bluesky_2.png",
        width=30,
        height=16,
        units="cm",
        dpi=300)
-         
