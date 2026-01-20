@@ -391,60 +391,13 @@ organisation_upset
 
 #join these plots together for figure 2
 plot_grid(actors_upset,organisation_upset,ncol=2,labels=c("(a)","(b)"),
-          label_size = 12,rel_widths = c(1,2),align = "h")
+          label_size = 12,rel_widths = c(1.3,2),align = "h")
 #save plot
 ggsave("figures/figure_2_actors_organisations.png",
        width=20,
        height=12,
        units="cm",
        dpi=300)
-
-
-#save plots for BES presentation
-
-#first actors
-actors_upset_presentation<-upset(sys_actor_subset_bool, actors, name='Actor type', width_ratio=0.1,
-                                 # with manual aes specification:
-                                 base_annotations=list('Number of studies'=(intersection_size(counts=FALSE))),
-                                 set_sizes=FALSE)+
-  theme(text=element_text(size=20),
-        axis.text=element_text(size=20),
-        axis.title=element_text(size=20))
-
-actors_upset_presentation
-
-ggsave("figures/for_talk/study_actors.png",
-       actors_upset_presentation,
-       width=20,
-       height=15,
-       units="cm",
-       dpi=300)
-
-
-#then organisations
-organisation_upset_presentation<-upset(Organisation_matrix_bool, organisations, name='Organisation type', width_ratio=0.1,
-                                       base_annotations=list('Number of studies'=(intersection_size(counts=FALSE))),
-                                       set_sizes=FALSE,
-                                       labeller=ggplot2::as_labeller(c(
-                                         'Government_statutory_body'='Government/statutory body',
-                                         'NGO_non_profit'='NGO/non profit',
-                                         'Academic_institution'='Academic institution',
-                                         'Community_local_organisation'='Community/local organisation',
-                                         "Private_sector"='Private sector'
-                                       )))+theme(text=element_text(size=20),
-                                                 axis.text=element_text(size=20),
-                                                 axis.title=element_text(size=20),
-                                                 axis.title.y=element_text(size=20))
-
-organisation_upset_presentation
-
-ggsave("figures/for_talk/study_organisations.png",
-       organisation_upset_presentation,
-       width=30,
-       height=15,
-       units="cm",
-       dpi=300)
-
 
 
 ########################################################################
@@ -538,7 +491,8 @@ mentions_factors_categories$factors_label<-c("Scientist-actor",
                                              "Culture",
                                              "Culture",
                                              "Inconclusive",
-                                             "Attitude to evidence use")
+                                             "Attitude to evidence use",
+                                             "Difficulty finding evidence")
 
 #add alternative high-level categories
 mentions_factors_categories <- mentions_factors_categories %>%
@@ -651,83 +605,9 @@ x.grob <- textGrob("Pecentage of studies mentioning factor",
 grid.arrange(arrangeGrob(combined_factor_plot, 
                          left = y.grob, bottom = x.grob))
 
-?arrangeGrob
-
 ggsave("figures/figure_3_factors_coloured.png",
        width=20,
        height=18,
-       units="cm",
-       dpi=300)
-
-#plot figures for BES presentation
-
-#first relationships
-relationship_plot_presentation<-relationship_plot+
-  facet_wrap(~category)+
-  theme(text=element_text(size=20),
-        axis.text = element_text(size=18),
-        axis.title = element_text(size=22,face="bold"),
-        strip.text = element_text(size=28,face="bold"),
-        strip.background = element_rect(fill="lightgrey"))+
-  scale_x_continuous(limits=c(0,50))
-
-ggsave("figures/for_talk/relationships.png",
-       relationship_plot_presentation,
-       width=30,
-       height=15,
-       units="cm",
-       dpi=300)
-
-#now evidence characteristics
-evidence_plot_presentation<-evidence_plot+
-  facet_wrap(~category)+
-  theme(text=element_text(size=20),
-        axis.text = element_text(size=18),
-        axis.title = element_text(size=22,face="bold"),
-        strip.text = element_text(size=28,face="bold"),
-        strip.background = element_rect(fill="lightgrey"))+
-  scale_x_continuous(limits=c(0,50))
-
-ggsave("figures/for_talk/evidence_characteristics.png",
-       evidence_plot_presentation,
-       width=30,
-       height=15,
-       units="cm",
-       dpi=300)
-
-#now practitioners and organisations
-actor_plot_presentation<-actor_plot+
-  facet_wrap(~category)+
-  theme(text=element_text(size=20),
-        axis.text = element_text(size=18),
-        axis.title = element_text(size=22,face="bold"),
-        strip.text = element_text(size=28,face="bold"),
-        strip.background = element_rect(fill="lightgrey"))+
-  scale_x_continuous(limits=c(0,50))
-
-ggsave("figures/for_talk/actor_characteristics.png",
-       actor_plot_presentation,
-       width=31,
-       height=16,
-       units="cm",
-       dpi=300)
-
-
-#now researcher and research organisations
-researcher_plot_presentation<-researcher_plot+
-  facet_wrap(~category)+
-  theme(text=element_text(size=20),
-        axis.text = element_text(size=18),
-        axis.title = element_text(size=22,face="bold"),
-        strip.text = element_text(size=28,face="bold"),
-        strip.background = element_rect(fill="lightgrey"))+
-  scale_x_continuous(limits=c(0,50))
-
-
-ggsave("figures/for_talk/researcher_characteristics.png",
-       researcher_plot_presentation,
-       width=30,
-       height=16,
        units="cm",
        dpi=300)
 
