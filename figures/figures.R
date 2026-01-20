@@ -110,15 +110,15 @@ sys_biome_subset <- sys_map_data %>%
   filter(!is.na(biome), biome != "") %>%
   separate_rows(biome, sep = ",\\s*") %>%
   mutate(biome = str_trim(biome),biome_std = case_when(
-      #Agroecosystems
-      str_detect(biome,regex("agricultur|agro ?ecosystems?", ignore_case = TRUE)) ~ "Agroecosystem",
-      # Not reported
-      str_detect(biome,regex("not mentioned|not reported", ignore_case = TRUE)) ~ "Not reported",
-      #Other
-      str_detect(biome,regex("mangroves?|mountains?|floodplains?|terrestrial ecosystems|grasslands?|shrublands?|deserts?|coastal|polar regions?|peatlands?",
-          ignore_case = TRUE)) ~ "Other",
-      TRUE ~ biome
-    )
+    #Agroecosystems
+    str_detect(biome,regex("agricultur|agro ?ecosystems?", ignore_case = TRUE)) ~ "Agroecosystem",
+    # Not reported
+    str_detect(biome,regex("not mentioned|not reported", ignore_case = TRUE)) ~ "Not reported",
+    #Other
+    str_detect(biome,regex("mangroves?|mountains?|floodplains?|terrestrial ecosystems|grasslands?|shrublands?|deserts?|coastal|polar regions?|peatlands?",
+                           ignore_case = TRUE)) ~ "Other",
+    TRUE ~ biome
+  )
   ) %>%
   group_by(biome_std) %>%
   summarise(
@@ -236,7 +236,7 @@ location_plot_presentation<-ggplot(world_map_join,aes(fill=n_studies))+
         legend.text=element_text(size=20),
         legend.title=element_text(size=20))+
   coord_sf(xlim = c(-180,180),ylim=c(-55,85),expand = FALSE)+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25))
+  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25,30,35,40))
 
 #save figure
 ggsave("figures/for_talk/study_country.png",
@@ -271,12 +271,14 @@ ggsave("figures/for_talk/study_biome.png",
 #Figure 2 - Actors and organisations#############################
 #################################################################
 
-#figure 2a - bar chart with types of actors that are the focus of studies
+#first organise data for upset plots
 
-# Build a single, readable regex for things you want to collapse to "Other"
+#first data for actors
+
+# Build a single, readable regex for things I want to collapse to "Other"
 other_pat <- regex(
   # use groups, plurals and small spelling variants
-  "\\b(Indigenous (groups|representatives)|Knowledge[- ]?brokers?|Advisors?|Recrational fishers: coded as practitioners|Mining and agriculture representatives?|Policy analysts?|Science communicators?|Journalists?|Funders?|Grant funders?)\\b",
+  "\\b(Indigenous (groups|representatives)|Knowledge[- ]?brokers?|Advisors?|Recrational fishers: coded as practitioners|Mining and agriculture representatives?|Policy analysts?|Science communicators?|Journalists?|Funders?|Grant funders?|Law enforcement)\\b",
   ignore_case = TRUE
 )
 
@@ -291,7 +293,7 @@ sys_actor_subset <- sys_map_data %>%
   # 4) collapse many specific labels into "Other"
   mutate(
     stakeholder_population = case_when(
-      str_detect(stakeholder_population, other_pat) ~ "Other",
+      str_detect(stakeholder_population, other_pat) ~ "Other actors",
       TRUE ~ stakeholder_population
     )
   ) %>%
@@ -308,33 +310,13 @@ sys_actor_subset <- sys_map_data %>%
   )
 
 
-#Create an upset plot
+#second data for organisations
 
+dput(sys_map_data)
 
-listInput <- list(Practitioners = which(sys_actor_subset$Practitioners == 1),
-                  Researchers = which(sys_actor_subset$Researchers == 1),
-                  Policymakers = which(sys_actor_subset$Policymakers == 1),
-                  Other = which(sys_actor_subset$Other == 1))
-
-upset(fromList(listInput),order.by="freq",mainbar.y.label = "Number of studies",
-      sets.x.label = "No. of studies per group",show.numbers = FALSE)
-
-#same figure but removing "Other" category
-
-listInput2 <- list(Practitioners = which(sys_actor_subset$Practitioners == 1),
-                   Researchers = which(sys_actor_subset$Researchers == 1),
-                   Policymakers = which(sys_actor_subset$Policymakers == 1))
-actor_plot<-upset(fromList(listInput2),order.by="freq",mainbar.y.label = "Number of studies",
-                  sets.x.label = "No. of studies per group",show.numbers = FALSE)
-
-
-
-#figure 2b - bar chart with types of organisations that are the focus of studies
+write_csv(sys_map_data,"data/sys_map_data_dput.csv")
 
 #list unique values for organisation types
-
-names(sys_map_data)
-
 Organisation_matrix <- sys_map_data %>%
   select(rayyan_key, type_of_organisation_studied) %>%
   filter(!is.na(type_of_organisation_studied), type_of_organisation_studied != "") %>%
@@ -348,34 +330,9 @@ Organisation_matrix <- sys_map_data %>%
         "first nations group",
         "indigenous group",
         "local recreational fishers",
-        "recreational fisheries"
-      ) ~ "Community/local organisation",
-      TRUE ~ type_of_organisation_studied
-    )
-  ) %>%
-  distinct(rayyan_key, org_type_std) %>%
-  mutate(mentioned = 1L) %>%
-  pivot_wider(
-    names_from  = org_type_std,           # <- pivot on the recoded label
-    values_from = mentioned,
-    values_fill = 0,
-    values_fn   = ~ as.integer(any(. == 1))
-  )
-
-Organisation_matrix <- sys_map_data %>%
-  select(rayyan_key, type_of_organisation_studied) %>%
-  filter(!is.na(type_of_organisation_studied), type_of_organisation_studied != "") %>%
-  separate_rows(type_of_organisation_studied, sep = ",\\s*") %>%
-  mutate(
-    type_of_organisation_studied = str_squish(type_of_organisation_studied),
-    .type_lower = str_to_lower(type_of_organisation_studied),
-    org_type_std = case_when(
-      .type_lower %in% c(
-        "first nation fisheries",
-        "first nations group",
-        "indigenous group",
-        "local recreational fishers",
-        "recreational fisheries"
+        "recreational fisheries",
+        "Indigenous_groups",
+        "First_Nations_Communities"
       ) ~ "Community/local organisation",
       TRUE ~ type_of_organisation_studied
     )
@@ -393,42 +350,70 @@ Organisation_matrix <- sys_map_data %>%
   #Replace spaces and slashes with underscores
   rename_with(~ str_replace_all(.x, "[ /-]+", "_"))
 
+#potentially fixed version
+
+Organisation_matrix <- sys_map_data %>%
+  select(rayyan_key, type_of_organisation_studied) %>%
+  filter(!is.na(type_of_organisation_studied), type_of_organisation_studied != "") %>%
+  separate_rows(type_of_organisation_studied, sep = ",\\s*") %>%
+  
+  # 1) Clean the raw text and create a normalised key for matching
+  mutate(
+    type_of_organisation_studied = str_squish(type_of_organisation_studied),
+    
+    # normalised key: lower-case and treat space/_/-// as separators
+    org_key = type_of_organisation_studied %>%
+      str_to_lower() %>%
+      str_replace_all("[_\\-/]+", " ") %>%
+      str_squish()
+  ) %>%
+  
+  # 2) Recode to standardised groups
+  mutate(
+    org_type_std = case_when(
+      # Community/local organisation (include both spaced and underscored variants via org_key)
+      org_key %in% c("community local organisation","indigenous groups", "first nations communities", "indigenous organisation","first nations group","local recreational fishers","indigenous group","recreational fisheries","first nation fisheries") ~
+        "Local/indigenous organisation",
+      
+      # Other
+      org_key %in% c("research funders", "intergovernmental organisation", "media organisation") ~
+        "Other",
+      
+      # Otherwise keep the original label
+      TRUE ~ type_of_organisation_studied
+    )
+  ) %>%
+  
+  # 3) Avoid double-counting: one row per study × org type
+  distinct(rayyan_key, org_type_std) %>%
+  
+  # 4) Pivot to 0/1 incidence matrix
+  mutate(mentioned = 1L) %>%
+  pivot_wider(
+    names_from  = org_type_std,
+    values_from = mentioned,
+    values_fill = 0,
+    values_fn   = ~ as.integer(any(. == 1))
+  ) %>%
+  
+  # 5) Clean column names: trim + spaces/slashes/dashes/dots -> underscores
+  rename_with(~ str_trim(.x)) %>%
+  rename_with(~ str_replace_all(.x, "[ .\\/-]+", "_")) %>%
+  rename_with(~ str_replace_all(.x, "_+", "_")) %>%
+  rename_with(~ str_replace_all(.x, "^_|_$", "")) %>%
+  rename_with(~ str_to_lower(.x))
+
 names(Organisation_matrix)
 
-#input for upset plot
-listInput_orgs <- list("Government/statutory body" = which(Organisation_matrix$Government_statutory_body== 1),
-                       "NGO/non_profit" = which(Organisation_matrix$NGO_non_profit == 1),
-                       "Academic institution" = which(Organisation_matrix$Academic_institution== 1),
-                       "Community/local organisation" = which(Organisation_matrix$Community_local_organisation== 1))
 
-organisation_plot<-upset(fromList(listInput_orgs),order.by="freq",mainbar.y.label = "Number of studies",
-                         sets.x.label = "No. of studies per group",show.numbers = FALSE)
+#now produce figures for (a) actors focused on in studies and (b) the related organisations
 
-
-#combine the two upset plots into figure 2
-
-#try with complexupset package
-load("data/movies.rda")
-
-#set genres
-genres<-colnames(movies)[18:24]
-#convert to boolean values
-
-movies[genres] = movies[genres] == 1
-t(head(movies[genres], 3))
-movies[movies$mpaa == '', 'mpaa'] = NA
-movies = na.omit(movies)
-
-#plot this
-set_size(8, 3)
-upset(movies, genres, name='genre', width_ratio=0.1)
-
-#try to reproduce this with our data
 #first for actors
-#remove the 'other' category
-actors<-colnames(sys_actor_subset)[c(-1,-which(colnames(sys_actor_subset)=="Other"))]
+#remove the 'rayyan key' category
+actors<-colnames(sys_actor_subset)[c(-1)]
 sys_actor_subset_bool <- sys_actor_subset %>%
-  mutate(across(-rayyan_key, ~ .x == 1L))
+  mutate(across(-rayyan_key, ~ .x == 1L))%>%
+  select(!rayyan_key)
 
 actors_upset<-upset(sys_actor_subset_bool, actors, name='Actor type', width_ratio=0.1,
                     # with manual aes specification:
@@ -437,8 +422,8 @@ actors_upset<-upset(sys_actor_subset_bool, actors, name='Actor type', width_rati
 
 #then for organisations
 colnames(Organisation_matrix)
-#remove the categories "Research funders", "Not_detailed" and "Intergovernmental_organisation"
-organisations<-colnames(Organisation_matrix)[c(-1,-7,-8,-9)]
+#remove the category "Not_detailed" and the study ID
+organisations<-colnames(Organisation_matrix)[c(-1,-5)]
 Organisation_matrix_bool <- Organisation_matrix %>%
   mutate(across(-rayyan_key, ~ .x == 1L))
 
@@ -447,11 +432,12 @@ organisation_upset<-upset(Organisation_matrix_bool, organisations, name='Organis
                           base_annotations=list('Number of studies'=(intersection_size(counts=FALSE))),
                           set_sizes=FALSE,
                           labeller=ggplot2::as_labeller(c(
-                            'Government_statutory_body'='Government/statutory body',
-                            'NGO_non_profit'='NGO/non profit',
-                            'Academic_institution'='Academic institution',
-                            'Community_local_organisation'='Community/local organisation',
-                            "Private_sector"='Private sector'
+                            'government_statutory_body'='Government/statutory body',
+                            'ngo_non_profit'='NGO/non profit',
+                            'academic_institution'='Academic institution',
+                            'local_indigenous_organisation'='Local/indigenous organisation',
+                            "private_sector"='Private sector',
+                            "other"="Other"
                           )))+theme(text=element_text(size=10))
 organisation_upset
 
@@ -769,8 +755,8 @@ researcher_plot<-mentions_factors_categories%>%
 
 #combine these plots into figure 3
 combined_factor_plot<-plot_grid(actor_plot,evidence_plot,researcher_plot, relationship_plot,
-          ncol=2,labels=c("a)","b)","c)","d)"),label_size = 10,align = "v",
-          rel_heights = c(1,0.4))
+                                ncol=2,labels=c("a)","b)","c)","d)"),label_size = 10,align = "v",
+                                rel_heights = c(1,0.4))
 
 #create common x and y labels
 
