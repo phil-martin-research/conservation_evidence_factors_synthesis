@@ -219,54 +219,6 @@ ggsave("figures/figure_1_study_context.png",
        dpi=300)
 
 
-#save figures for BES talk
-
-#plot map
-location_plot_presentation<-ggplot(world_map_join,aes(fill=n_studies))+
-  geom_sf(colour="grey70",linewidth=0.5)+
-  theme_void()+
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks=element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "bottom",
-        legend.key.width = unit(2,"cm"),
-        legend.key.height = unit(0.25,"cm"),
-        legend.text=element_text(size=20),
-        legend.title=element_text(size=20))+
-  coord_sf(xlim = c(-180,180),ylim=c(-55,85),expand = FALSE)+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25,30,35,40))
-
-#save figure
-ggsave("figures/for_talk/study_country.png",
-       plot=location_plot_presentation,
-       width=30,
-       height=16,
-       units="cm",
-       dpi=300)
-
-#plot biome data
-biome_plot_presentation<-
-  ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),
-                              y=perc_studies,fill=perc_studies))+
-  geom_bar(stat="identity")+
-  theme_cowplot()+
-  coord_flip()+
-  labs(x="Biome",y="Percentage of studies (%)")+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
-  theme(legend.position = "none",
-        axis.text=element_text(size=20),
-        axis.title=element_text(size=20))
-
-#save figure
-ggsave("figures/for_talk/study_biome.png",
-       plot=biome_plot_presentation,
-       width=30,
-       height=16,
-       units="cm",
-       dpi=300)
-
 #################################################################
 #Figure 2 - Actors and organisations#############################
 #################################################################
@@ -372,11 +324,9 @@ Organisation_matrix <- sys_map_data %>%
   mutate(
     org_type_std = case_when(
       # Community/local organisation (include both spaced and underscored variants via org_key)
-      org_key %in% c("community local organisation","indigenous groups", "first nations communities", "indigenous organisation","first nations group","local recreational fishers","indigenous group","recreational fisheries","first nation fisheries") ~
-        "Local/indigenous organisation",
-      
-      # Other
-      org_key %in% c("research funders", "intergovernmental organisation", "media organisation") ~
+      # classify range of groups with lower representation as "other"
+      org_key %in% c("community local organisation","indigenous groups", "first nations communities", "indigenous organisation","first nations group","local recreational fishers",
+                     "indigenous group","recreational fisheries","first nation fisheries","research funders", "intergovernmental organisation", "media organisation","private sector") ~
         "Other",
       
       # Otherwise keep the original label
@@ -435,8 +385,6 @@ organisation_upset<-upset(Organisation_matrix_bool, organisations, name='Organis
                             'government_statutory_body'='Government/statutory body',
                             'ngo_non_profit'='NGO/non profit',
                             'academic_institution'='Academic institution',
-                            'local_indigenous_organisation'='Local/indigenous organisation',
-                            "private_sector"='Private sector',
                             "other"="Other"
                           )))+theme(text=element_text(size=10))
 organisation_upset
@@ -498,74 +446,6 @@ ggsave("figures/for_talk/study_organisations.png",
        dpi=300)
 
 
-#basic actors plot for use in BES presentation
-#just a bar plot rather than an upset plot
-actor_counts <- sys_actor_subset %>%
-  select(-rayyan_key) %>%
-  summarise(across(everything(), sum)) %>%
-  #calculate percentage of studies for each category
-  mutate(across(everything(), ~ .x / nrow(sys_actor_subset) * 100)) %>%
-  pivot_longer(everything(), names_to = "actor_type", values_to = "n_studies") %>%
-  arrange(desc(n_studies))
-
-#plot the results in a bar chart
-actor_bar_plot<-ggplot(actor_counts,aes(x=reorder(actor_type,-n_studies),y=n_studies,fill=n_studies))+
-  geom_bar(stat="identity")+
-  theme_cowplot()+
-  labs(x="Actor type",y="Percentage of studies (%)")+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
-  theme(legend.position = "none",
-        axis.text=element_text(size=20),
-        axis.title=element_text(size=24,face="bold"))
-
-#save plot
-ggsave("figures/for_talk/study_actors_barplot.png",
-       actor_bar_plot,
-       width=30,
-       height=16,
-       units="cm",
-       dpi=300)
-
-#now do the same for organisations
-organisation_counts <- Organisation_matrix %>%
-  select(-rayyan_key) %>%
-  summarise(across(everything(), sum)) %>%
-  #calculate percentage of studies for each category
-  mutate(across(everything(), ~ .x / nrow(Organisation_matrix) * 100)) %>%
-  pivot_longer(everything(), names_to = "organisation_type", values_to = "n_studies") %>%
-  #remove underscores from organisation type labels
-  mutate(organisation_type=gsub("_", " ", organisation_type))%>%
-  #merge Community local organisation, not detailed, 
-  #Intergovernmental organisation and research funders into other
-  mutate(organisation_type=fct_recode(organisation_type, 
-                                      Other = "Community local organisation",
-                                      Other = "Not detailed",
-                                      Other = "Intergovernmental organisation",
-                                      Other= "Research funders"))%>%
-  group_by(organisation_type)%>%
-  summarise(perc_studies=sum(n_studies))%>%
-  arrange(desc(perc_studies))
-
-
-#plot the results in a bar chart
-#first replace underscores in organisation type labels
-
-ggplot(organisation_counts,aes(x=reorder(organisation_type,perc_studies),y=perc_studies,fill=perc_studies))+
-  geom_bar(stat="identity")+
-  theme_cowplot()+
-  coord_flip()+
-  labs(x="Organisation type",y="Percentage of studies (%)")+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
-  theme(legend.position = "none",
-        axis.text=element_text(size=20),
-        axis.title=element_text(size=24,face="bold"))
-
-#save plot
-ggsave("figures/for_talk/study_organisations_barplot.png",
-       width=30,
-       height=16,
-       units="cm",
-       dpi=300)
 
 ########################################################################
 ##Figure 3 - Factors influencing evidence use###########################
