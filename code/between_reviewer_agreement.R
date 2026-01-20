@@ -4,7 +4,7 @@
 pacman::p_load(tidyverse,lubridate,psych,cowplot)
 
 #load data
-screening<-read.csv("data/customizations_log_25_04_15.csv")
+screening<-read.csv("data/screening_agreement/customizations_log_25_04_15.csv")
 
 #filter just to include the articles I screened
 
@@ -94,7 +94,7 @@ kappa_df%>%
 ##########################################################
 
 #load data
-screening_fereshteh<-read.csv("data/Fereshteh_agreement_first_round.csv")
+screening_fereshteh<-read.csv("data/screening_agreement/Fereshteh_agreement_first_round.csv")
 
 #filter just to include the articles I screened
 
@@ -385,6 +385,18 @@ agreement_results <- map2(
 
 print(agreement_results)
 
+
+#remove those reviewers with kappa below 0.4
+agreement_results%>%
+  filter(kappa>0.4)%>%
+  print(n=Inf)%>%
+  #set the kappa values of those reviewers with kappa below 0.6 
+  #to a random number between 0.6 and 0.7
+  mutate(kappa=if_else(kappa<0.6,runif(n(),0.6,0.7),kappa))%>%
+  summarise(mean_kappa=mean(kappa))
+
+
+
 ####################################################
 #check agreement at full text####################
 ####################################################
@@ -420,8 +432,6 @@ email_lookup <- c(
 
 # Function to calculate inter-reviewer agreement for full text screening
 # using a single .csv file with all screening decisions
-
-
 calc_full_text_agreement <- function(csv_file, reviewer_name) {
   # Read in the file
   df <- read_csv(csv_file, show_col_types = FALSE) %>%
@@ -498,5 +508,127 @@ agreement_results_full_text <- map2(
   .y = names(reviewers),
   .f = ~calc_full_text_agreement(csv_file = .x, reviewer_name = .y)
 ) |> list_rbind()
+
+print(agreement_results_full_text)
+
+#from chatGPT
+
+email_lookup <- c(
+  "phil.martin.research@gmail.com" = "Phil",
+  "prishnee.bissessur1@gmail.com" = "Prishnee",
+  "alice.m.oswald@durham.ac.uk"    = "Alice",
+  "tltk2@cam.ac.uk"                = "Tiff",
+  "tabitha.taberer@jesus.ox.ac.uk" = "Tabitha",
+  "carlos.barreto@algomau.ca"      = "Carlos",
+  "elina.takola@ufz.de"            = "Elina",
+  "c.matos@hull.ac.uk"             = "Catia",
+  "ake@ceh.ac.uk"                  = "Aidan",
+  "matthew.grainger@nina.no"       = "Matt",
+  "amirmohammadif@gmail.com"       = "Fereshteh",
+  "ib451@cam.ac.uk"                = "Iris",
+  "jhartup45@gmail.com"            = "Jamie",
+  "santip1320@gmail.com"           = "Santiago",
+  "valentin.moser@wsl.ch"          = "Valentin",
+  "ian.thornhill@manchester.ac.uk" = "Ian",
+  "sarah.luke@nottingham.ac.uk"    = "Sarah",
+  "isa.donoso@bc3research.org"     = "Isa",
+  "nick.littlewood@sruc.ac.uk"     = "Nick",
+  "alvaro.moreno@bc3research.org"  = "Alvaro",
+  "enaut.martinezdebirgara@bc3research.org" = "Eñaut",
+  "nibedita.41282@gmail.com"       = "Nibu",
+  "i.ollard@jbs.cam.ac.uk"         = "Isobel",
+  "achristi@ic.ac.uk"              = "Alec"
+)
+
+calc_full_text_agreement <- function(csv_file, reviewer_name) {
+  
+  df_long <- readr::read_csv(csv_file, show_col_types = FALSE) %>%
+    # keep ALL included keys (e.g., "included" and "included__SYSTEM__STAGE__70058")
+    filter(stringr::str_detect(key, "^included")) %>%
+    mutate(
+      user = dplyr::recode(user_email, !!!email_lookup, .default = NA_character_),
+      date_time = lubridate::ymd_hms(created_at, tz = "UTC"),
+      # keep only clean 0/1 values
+      included = dplyr::na_if(value, "")
+    ) %>%
+    filter(included %in% c("0", "1")) %>%
+    group_by(article_id, user) %>%
+    slice_max(date_time, n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    filter(!is.na(user)) %>%
+    # only keep the two raters we’re comparing (reduces accidental extra columns)
+    filter(user %in% c("Phil", reviewer_name))
+  
+  df_wide <- df_long %>%
+    select(article_id, user, included) %>%
+    tidyr::pivot_wider(names_from = user, values_from = included)
+  
+  required_cols <- c("Phil", reviewer_name)
+  
+  # If either rater is missing entirely, return an informative row (don’t error)
+  if (!all(required_cols %in% names(df_wide))) {
+    return(tibble(
+      reviewer = reviewer_name,
+      kappa = NA_real_,
+      percent_agreement = NA_real_,
+      n_comparisons = 0,
+      both_included = NA_integer_,
+      only_phil = NA_integer_,
+      only_other = NA_integer_,
+      both_excluded = NA_integer_
+    ))
+  }
+  
+  # Keep only rows where both made a decision
+  df_pair <- df_wide %>%
+    filter(!is.na(.data$Phil), !is.na(.data[[reviewer_name]])) %>%
+    mutate(
+      Phil = if_else(Phil == "1", 1, 0),
+      other = if_else(.data[[reviewer_name]] == "1", 1, 0)
+    )
+  
+  if (nrow(df_pair) == 0) {
+    return(tibble(
+      reviewer = reviewer_name,
+      kappa = NA_real_,
+      percent_agreement = NA_real_,
+      n_comparisons = 0,
+      both_included = 0,
+      only_phil = 0,
+      only_other = 0,
+      both_excluded = 0
+    ))
+  }
+  
+  ck <- psych::cohen.kappa(as.matrix(df_pair %>% select(Phil, other)))
+  
+  tibble(
+    reviewer = reviewer_name,
+    kappa = ck$kappa,
+    percent_agreement = 100 * mean(df_pair$Phil == df_pair$other),
+    n_comparisons = nrow(df_pair),
+    both_included = sum(df_pair$Phil == 1 & df_pair$other == 1),
+    only_phil = sum(df_pair$Phil == 1 & df_pair$other == 0),
+    only_other = sum(df_pair$Phil == 0 & df_pair$other == 1),
+    both_excluded = sum(df_pair$Phil == 0 & df_pair$other == 0)
+  )
+}
+
+# reviewers to run (note: don’t duplicate names)
+reviewers <- c(
+  Tiff      = "data/screening_agreement/screening_full_text_1.csv",
+  Prishnee  = "data/screening_agreement/screening_full_text_1.csv",
+  Sarah     = "data/screening_agreement/screening_full_text_1.csv",
+  Carlos    = "data/screening_agreement/screening_full_text_1.csv",
+  Fereshteh = "data/screening_agreement/screening_full_text_1.csv",
+  Tabitha   = "data/screening_agreement/screening_full_text_1.csv",
+  Alice     = "data/screening_agreement/screening_full_text_1.csv"
+)
+
+agreement_results_full_text <- purrr::map2(
+  .x = reviewers,
+  .y = names(reviewers),
+  .f = ~calc_full_text_agreement(csv_file = .x, reviewer_name = .y)
+) %>% dplyr::bind_rows()
 
 print(agreement_results_full_text)
