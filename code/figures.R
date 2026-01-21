@@ -5,7 +5,7 @@
 pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
                countrycode,rnaturalearth,rnaturalearthdata,rcartocolor,
                tidyr,UpSetR,ComplexUpset,ggplot2,BaseSet,ggh4x,
-               tidytext,forcats,grid,gridExtra,grateful)
+               tidytext,forcats,grid,gridExtra,grateful,vegan)
 
 #load data
 sys_map_data<-read.csv("data/extracted_data_2026_01_20.csv")
@@ -42,35 +42,78 @@ sys_location_subset<-sys_map_data%>%separate_rows(location, sep = ",\\s*")%>%
          location!="Not details",
          location!="South-East Asia")%>%
   #remove any white space from location names
-  mutate(location=str_trim(location))
+  mutate(location=str_trim(location))%>%
+  #remove and blank locations
+  filter(!is.na(location),location!="",location!=" ")
 
 
 #count number of studies per location
-sys_location_subset<-sys_location_subset%>%
+sys_location_subset_count<-sys_location_subset%>%
   group_by(location)%>%
   summarise(n_studies=n())%>%
   ungroup()
 
-sys_location_subset%>%
+sys_location_subset_count%>%
   #order by number of studies
   arrange(desc(n_studies))%>%
   #calculate percentage of studies per location
-  mutate(perc_studies=(n_studies/nrow(sys_map_data))*100)%>%
-  print(n=120)
+  mutate(perc_studies=(n_studies/475)*100)%>%
+  print(n=160)
+
+#calculate the mean number of countries per study
+sys_location_subset%>%
+  group_by(rayyan_key)%>%
+  summarise(n_countries=n())%>%
+  ungroup()%>%
+  summarise(mean_countries=mean(n_countries),
+            sd_countries=sd(n_countries))
+
 
 #identify the continent each country is in - need to fix this so that 
 #study identity is taken into account
-sys_location_subset %>%
+# check what destinations are available in your installed countrycode
+destinations <- countrycode::codelist %>% names()
+
+# pick a usable "subregion" destination name if present
+subregion_dest <- dplyr::case_when(
+  "un.region.sub" %in% destinations ~ "un.region.sub",
+  "un.region.sub.name" %in% destinations ~ "un.region.sub.name",
+  "un_subregion" %in% destinations ~ "un_subregion",
+  TRUE ~ NA_character_
+)
+
+sys_location_subset_continent<-sys_location_subset %>%
   mutate(
-    continent = countrycode(location, "country.name", "continent",
-                            warn = TRUE) %>%
-      dplyr::coalesce(countrycode(location, "country.name.en", "continent", warn = TRUE))
-  ) %>%
-  arrange(desc(n_studies)) %>%
-  mutate(perc_studies = 100 * n_studies / nrow(sys_map_data)) %>%
-  group_by(continent) %>%
-  summarise(n_studies = sum(n_studies),
-            perc_studies = sum(perc_studies))
+    location = str_squish(location),
+    location = na_if(location, ""),
+    
+    # standardise common abbreviations/variants
+    location_std = case_when(
+      location %in% c("USA", "U.S.A.", "US", "U.S.") ~ "United States",
+      location %in% c("UK", "U.K.")                  ~ "United Kingdom",
+      location == "denmark"                          ~ "Denmark",
+      location == "Lao"                              ~ "Laos",
+      location == "the Congo"                        ~ "Republic of the Congo",
+      location == "the Democratic Republic of the Congo" ~ "Democratic Republic of the Congo",
+      TRUE ~ location
+    ),
+    
+    # compute continent (always available)
+    continent_raw = countrycode(
+      location_std,
+      origin = "country.name",
+      destination = "continent",
+      warn = FALSE
+    )
+  )
+#summarise the number of studies per continent and percentage of studies
+sys_location_subset_continent%>%
+  group_by(continent_raw)%>%
+  summarise(n_studies=n())%>%
+  ungroup()%>%
+  mutate(perc_studies=(n_studies/475)*100)%>%
+  print(n=10)
+
 
 #add ISO3 country name
 sys_location_subset$iso_a3_eh<-countrycode(sys_location_subset$location,origin = "country.name",destination = "iso3c")
@@ -127,6 +170,16 @@ sys_biome_subset <- sys_map_data %>%
   ) %>%
   arrange(desc(perc_studies))
 
+#calculate the mean number of biomes per study
+sys_biome_subset_mean<-sys_map_data%>%
+  filter(!is.na(biome), biome != "") %>%
+  separate_rows(biome, sep = ",\\s*") %>%
+  filter(biome!="Not reported",biome!="not reported",biome!="Not mentioned")%>%
+  group_by(rayyan_key)%>%
+  summarise(n_biomes=n())%>%
+  ungroup()%>%
+  summarise(mean_biomes=mean(n_biomes),
+            sd_biomes=sd(n_biomes))
 
 #plot biome data
 biome_plot<-ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),y=perc_studies))+
@@ -401,7 +454,7 @@ ggsave("figures/figure_2_actors_organisations.png",
 
 
 ########################################################################
-##Figure 3 - Factors influencing evidence use###########################
+##Figure 3 - Factors influencing evidence use ##########################
 ########################################################################
 
 ############################################
@@ -464,33 +517,33 @@ mentions_factors_categories$factors_label<-c("Scientist-actor",
                                              "Relevance",
                                              "Capacity & resources",
                                              "Social, political,& economic context",
-                                             "Accessibility",
                                              "Format & language",
-                                             "Research skills",
                                              "Rigour",
+                                             "Accessibility",
+                                             "Research skills",
                                              "Uncertainty",
                                              "Attitude to evidence use",
                                              "Existence",
                                              "Timeliness",
-                                             "Between colleagues",
                                              "Source",
+                                             "Between colleagues",
+                                             "Spatial/temporal scale",
                                              "Practitioner-stakeholder",
                                              "Time lag",
-                                             "Management",
-                                             "Spatial/temporal scale",
-                                             "Quantity of information",
-                                             "Language barrier",
                                              "Other stakeholder values",
+                                             "Management",
                                              "Personal characteristics",
+                                             "Quantity of information",
                                              "Skills & awareness",
+                                             "Implementation capacity",
+                                             "Language barrier",
+                                             "Culture",
                                              "Nature of decision",
                                              "Decision process",
                                              "Awareness of evidence",
-                                             "Implementation capacity",
                                              "Academic demands",
+                                             "Conclusiveness",
                                              "Culture",
-                                             "Culture",
-                                             "Inconclusive",
                                              "Attitude to evidence use",
                                              "Difficulty finding evidence")
 
@@ -517,6 +570,7 @@ mentions_factors_categories <- mentions_factors_categories %>%
 
 mentions_factors_categories%>%
   print(n=100)
+
 
 #plot this
 mentions_factors_categories%>%
@@ -595,118 +649,27 @@ combined_factor_plot<-plot_grid(actor_plot,evidence_plot,researcher_plot, relati
 #create common x and y labels
 
 y.grob <- textGrob("Factor impacting evidence use", 
-                   gp=gpar(fontface="bold",fontsize=12), rot=90)
+                   gp=gpar(fontface="bold",fontsize=14), rot=90)
 
-x.grob <- textGrob("Pecentage of studies mentioning factor", 
-                   gp=gpar(fontface="bold", fontsize=12))
+x.grob <- textGrob("                             Pecentage of studies mentioning factor", 
+                   gp=gpar(fontface="bold", fontsize=14))
 
 #add to plot
 
-grid.arrange(arrangeGrob(combined_factor_plot, 
-                         left = y.grob, bottom = x.grob))
+combined_factor_plot_with_axes<-grid.arrange(arrangeGrob(combined_factor_plot, 
+                                                         left = y.grob, bottom = x.grob))
+
 
 ggsave("figures/figure_3_factors_coloured.png",
+       combined_factor_plot_with_axes,
        width=20,
-       height=18,
+       height=14,
        units="cm",
        dpi=300)
 
-########################################################
-#figure 4 - heatmaps of factors by biomes and continent#
-########################################################
-
-#first by biome
-#join factor mentions to biome data
-sys_biome_factors <- sys_map_data %>%
-  select(rayyan_key, biome, factors_influencing_evidence_use) %>%
-  filter(!is.na(biome), !is.na(factors_influencing_evidence_use)) %>%
-  # Protect the multi-comma phrase with a token that has no commas
-  mutate(factors_influencing_evidence_use =
-           str_replace_all(factors_influencing_evidence_use,
-                           fixed("Social, political, and economic context"),
-                           "SOC_POL_ECON__TOKEN")) %>%
-  # IMPORTANT: separate_longer_delim uses a literal delimiter (not regex)
-  separate_longer_delim(factors_influencing_evidence_use, delim = ",") %>%
-  mutate(
-    # trim whitespace
-    factors_influencing_evidence_use = str_trim(factors_influencing_evidence_use),
-    # drop empty fragments that can appear from ",," etc.
-    factors_influencing_evidence_use = na_if(factors_influencing_evidence_use, ""),
-    # Restore the protected phrase
-    factors_influencing_evidence_use =
-      str_replace_all(factors_influencing_evidence_use,
-                      fixed("SOC_POL_ECON__TOKEN"),
-                      "Social, political, and economic context"),
-    # Rename "Scale"
-    factors_influencing_evidence_use =
-      str_replace(factors_influencing_evidence_use,
-                  regex("^Scale$", ignore_case = TRUE),
-                  "Spatial/temporal scale of evidence"),
-    # Rename "Timelieness of evidence"
-    factors_influencing_evidence_use =
-      str_replace(factors_influencing_evidence_use,
-                  regex("^Timelieness of evidence$", ignore_case = TRUE),
-                  "Timeliness of evidence"),
-    # Rename "Characteristics"
-    factors_influencing_evidence_use =
-      str_replace(factors_influencing_evidence_use,
-                  regex("^Decision-maker characteristics$", ignore_case = TRUE),
-                  "Practitioner/policymaker personal characteristics"))%>%
-  filter(!is.na(factors_influencing_evidence_use))%>%
-  left_join(factor_categories, by = c("factors_influencing_evidence_use" = "factor"))%>%
-  filter(!is.na(biome), biome != "") %>%
-  separate_rows(biome, sep = ",\\s*") %>%
-  mutate(
-    biome = str_trim(biome),
-    biome_std = case_when(
-      str_detect(biome, regex("Agricultur|Mangrove|Mountains?|Floodplains?|Terrestrial ecosystems|Grassland|
-                              Shrubland|Desert|Coastal|Shrubland",
-                              ignore_case = TRUE)) ~ "Other",
-      str_detect(biome,regex("Not mentioned",ignore_case = TRUE)) ~ "Not reported",
-      TRUE ~ biome
-    )
-  ) %>%
-  group_by(biome_std, category) %>%
-  summarise(n_mentions = n(), .groups = "drop") %>%
-  arrange(biome_std, category)%>%
-  #filter out biomes "Not reported" and "Other"
-  filter(biome_std!="Not reported",
-         biome_std!="Other")%>%
-  mutate(
-    category = fct_recode(
-      as_factor(category),
-      
-      # --- Merge + rename practitioner/policymaker & decision context ---
-      "Decision-maker characteristics,\norganisations, and decisions" = "Practitioner/policymaker",
-      "Decision-maker characteristics,\norganisations, and decisions" = "Management organization",
-      "Decision-maker characteristics,\norganisations, and decisions" = "Decision context",
-      
-      # --- Standardise researcher label ---
-      "Researcher &\nresearch organisations" = "Researcher and research organizations",
-      
-      # --- Rename evidence facet ---
-      "Characteristics of evidence" = "Nature of evidence"
-    ))
-
-unique(sys_biome_factors$biome_std)
-
-#now plot this as a heatmap
-ggplot(sys_biome_factors,aes(x=category,y=biome_std,fill=n_mentions))+
-  geom_tile(colour="white")+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies")+
-  theme_cowplot()+
-  labs(x="Factor category",y="Biome")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text=element_text(size=12),
-        axis.title=element_text(size=14))
-
-#this is not interesting! Biomes have similar patterns of factors mentioned
-
-#try by continent instead
-
 
 ###################################################
-#figure 5 - Changes in factors studied over time###
+#figure 4 - Changes in factors studied over time###
 ###################################################
 
 clean_factors_data<-sys_map_data %>%
@@ -783,30 +746,7 @@ factors_over_time <- clean_factors_data_studies %>%
   ) %>%
   arrange(year, category)
 
-#now plot this as line plot
-ggplot(factors_over_time,aes(x=year,y=n_studies,colour=category))+
-  geom_line(size=1,alpha=0.5)+
-  geom_point(size=3,alpha=0.5)+
-  theme_cowplot()+
-  labs(x="Publication year",y="Number of studies")+
-  scale_colour_carto_d(palette = "ag_Sunset",name="Factor category")+
-  scale_x_continuous(limits = c(min(factors_over_time$year),
-                                max(factors_over_time$year)+1))+
-  theme(axis.text=element_text(size=10),
-        axis.title=element_text(size=12),
-        legend.text=element_text(size=10),
-        legend.title=element_text(size=12),
-        legend.position = "bottom")+
-  guides(colour=guide_legend(nrow=2,byrow=TRUE))
-
-#save figure
-ggsave("figures/figure_4_factors_over_time.png",
-       width=16,
-       height=12,
-       units="cm",
-       dpi=300)
-
-#do the same figure but with cumulative number of studies over years
+#cumulative number of studies over years
 factors_over_time_cum <- factors_over_time %>%
   group_by(category) %>%
   arrange(year) %>%
@@ -827,6 +767,107 @@ ggplot(factors_over_time_cum,aes(x=year,y=cum_studies,colour=category))+
         legend.title=element_text(size=12),
         legend.position = "bottom")+
   guides(colour=guide_legend(nrow=2,byrow=TRUE))
+
+#save figure
+ggsave("figures/figure_4_factors_over_time.png",
+       width=16,
+       height=12,
+       units="cm",
+       dpi=300)
+
+
+###################################################
+# figure 5 - cluster analysis using nmds etc ######
+###################################################
+
+factor_matrix <- clean_factors_data %>%
+  mutate(present = 1L) %>%
+  pivot_wider(
+    id_cols= rayyan_key,
+    names_from  = factors_influencing_evidence_use,
+    values_from = present,
+    values_fill = 0
+  )
+
+#count number of times factors are mentioned in total
+factor_sums <- colSums(factor_matrix[,-1])
+
+#drop factors mentioned in less than 5 studies
+factors_to_keep <- names(factor_sums[factor_sums >= 5])
+
+factor_matrix_clean <- factor_matrix %>%
+  select(rayyan_key, all_of(factors_to_keep))
+
+#drop columns that aren't needed
+factor_matrix_wide <- factor_matrix_clean %>%
+  select(-rayyan_key,)
+
+#clean column names
+factor_matrix_wide2 <- factor_matrix_wide %>%
+  rename_with(~ str_trim(.x)) %>%
+  rename_with(~ str_replace_all(.x, "[ .\\/-]+", "_")) %>%
+  rename_with(~ str_replace_all(.x, "_+", "_")) %>%
+  rename_with(~ str_replace_all(.x, "^_|_$", "")) %>%
+  rename_with(~ str_to_lower(.x))
+
+# Jaccard distance on presence/absence data
+factor_dist <- vegdist(
+  factor_matrix_wide2,
+  method = "jaccard",
+  binary = TRUE
+)
+
+
+nmds_factors <- metaMDS(
+  factor_matrix_wide2,
+  distance = "jaccard",
+  binary = TRUE,
+  k = 2,            # start with 2D
+  trymax = 100
+)
+
+#check stress
+nmds_factors$stress
+
+#hierarchical clustering
+hc_factors <- hclust(factor_dist, method = "average")
+
+#choose number of clusters
+for (k in 3:6) {
+  cat("\n--- k =", k, "---\n")
+  print(table(cutree(hc_factors, k = k)))
+}
+
+#plot the nmds result
+nmds_scores <- as.data.frame(scores(nmds_factors, display = "sites"))
+nmds_scores$rayyan_key <- factor_matrix$rayyan_key
+
+ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2)) +
+  geom_point(alpha = 0.7, size = 2) +
+  coord_equal() +
+  theme_bw() +
+  labs(
+    title = "NMDS of studies based on factors influencing evidence use",
+    subtitle = paste("Stress =", round(nmds_factors$stress, 3))
+  )
+
+
+#run a 3d NMDS as a sensitivity analysis
+nmds_3d <- metaMDS(
+  factor_matrix_wide2,
+  distance = "jaccard",
+  binary = TRUE,
+  k = 3,
+  trymax = 100
+)
+
+nmds_3d$stress
+#stress is now lower
+
+nrow(factor_matrix_wide2)
+nrow(unique(factor_matrix_wide2))
+
+rowSums(factor_matrix_wide2) |> summary()
 
 ##################################################
 #Supplementary figures############################
