@@ -1,5 +1,6 @@
 # this script produces all the figures and analyses for the 
 # systematic map manuscript on evidence use in conservation
+# small edit
 
 #first load packages
 pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
@@ -8,9 +9,9 @@ pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
                tidytext,forcats,grid,gridExtra,grateful,vegan)
 
 #load data
-sys_map_data<-read.csv("data/extracted_data_2026_01_20.csv")
+sys_map_data<-read.csv("data/extracted_data_2026_01_21.csv")
 factor_categories<-read.csv("data/evidence_factor_categories.csv")
-articles<-read.csv("data/articles_2025_11_12.csv")
+articles<-read.csv("data/articles_2026_01_26.csv")
 
 #########################################################
 # 1- Tidy and clean data#################################
@@ -40,16 +41,37 @@ sys_location_subset<-sys_map_data%>%separate_rows(location, sep = ",\\s*")%>%
          location!="Oceania",
          location!="South America",
          location!="Not details",
-         location!="South-East Asia")%>%
+         location!="South-East Asia",
+         location!="European Commission",
+         location!="Not mentioned")%>%
   #remove any white space from location names
   mutate(location=str_trim(location))%>%
   #remove and blank locations
   filter(!is.na(location),location!="",location!=" ")
 
 
+#fix country names
+sys_location_subset<-sys_location_subset %>%
+  mutate(
+    location = str_squish(location),
+    location = na_if(location, ""),
+    
+    # standardise common abbreviations/variants
+    location_std = case_when(
+      location %in% c("USA", "U.S.A.", "US", "U.S.") ~ "United States",
+      location %in% c("UK", "U.K.")                  ~ "United Kingdom",
+      location == "denmark"                          ~ "Denmark",
+      location == "Lao"                              ~ "Laos",
+      location %in% c("Congo","the Congo","Republic of Congo","Republic of the Congo") ~ "Republic of the Congo",
+      location %in% c("the Democratic Republic of the Congo","Democratic Republic of Congo") ~ "Democratic Republic of the Congo",
+      location == "Saint Martin" ~ "Saint-Martin",
+      location == "Ivory Coast" ~ "Côte d'Ivoire",
+      TRUE ~ location
+    ))
+
 #count number of studies per location
 sys_location_subset_count<-sys_location_subset%>%
-  group_by(location)%>%
+  group_by(location_std)%>%
   summarise(n_studies=n())%>%
   ungroup()
 
@@ -68,7 +90,6 @@ sys_location_subset%>%
   summarise(mean_countries=mean(n_countries),
             sd_countries=sd(n_countries))
 
-
 #identify the continent each country is in - need to fix this so that 
 #study identity is taken into account
 # check what destinations are available in your installed countrycode
@@ -83,29 +104,14 @@ subregion_dest <- dplyr::case_when(
 )
 
 sys_location_subset_continent<-sys_location_subset %>%
-  mutate(
-    location = str_squish(location),
-    location = na_if(location, ""),
-    
-    # standardise common abbreviations/variants
-    location_std = case_when(
-      location %in% c("USA", "U.S.A.", "US", "U.S.") ~ "United States",
-      location %in% c("UK", "U.K.")                  ~ "United Kingdom",
-      location == "denmark"                          ~ "Denmark",
-      location == "Lao"                              ~ "Laos",
-      location == "the Congo"                        ~ "Republic of the Congo",
-      location == "the Democratic Republic of the Congo" ~ "Democratic Republic of the Congo",
-      TRUE ~ location
-    ),
-    
+    mutate(
     # compute continent (always available)
     continent_raw = countrycode(
       location_std,
       origin = "country.name",
       destination = "continent",
       warn = FALSE
-    )
-  )
+    ))
 #summarise the number of studies per continent and percentage of studies
 sys_location_subset_continent%>%
   group_by(continent_raw)%>%
@@ -115,15 +121,23 @@ sys_location_subset_continent%>%
   print(n=10)
 
 
+
 #add ISO3 country name
-sys_location_subset$iso_a3_eh<-countrycode(sys_location_subset$location,origin = "country.name",destination = "iso3c")
+sys_location_subset_count$iso_a3_eh<-countrycode(sys_location_subset_count$location_std,origin = "country.name",destination = "iso3c")
+#manually fix code for Saint Martin
+sys_location_subset_count$iso_a3_eh[sys_location_subset_count$location_std=="Saint-Martin"]<-"MAF"
+
+sys_location_subset_count$location_std
 
 #make global map
 world<-ne_countries(scale="medium",returnclass = "sf")
 
 #join geocoded data to shapefile
 world_map_join<-world%>%
-  left_join(sys_location_subset,by = "iso_a3_eh",keep=FALSE)
+  left_join(sys_location_subset_count,by = "iso_a3_eh",keep=FALSE)
+
+sys_location_subset_count%>%
+  print(n=150)
 
 #plot map
 location_plot<-ggplot(world_map_join,aes(fill=n_studies))+
@@ -186,7 +200,7 @@ biome_plot<-ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),y=perc
   geom_bar(stat="identity")+
   theme_cowplot()+
   coord_flip()+
-  labs(x="Biome",y="Percentage of studies (%)")+
+  labs(x="Ecosystem type",y="Percentage of studies (%)")+
   theme(legend.position = "none",
         axis.text=element_text(size=12),
         axis.title=element_text(size=14))
@@ -298,7 +312,7 @@ sys_actor_subset <- sys_map_data %>%
   # 4) collapse many specific labels into "Other"
   mutate(
     stakeholder_population = case_when(
-      str_detect(stakeholder_population, other_pat) ~ "Other actors",
+      str_detect(stakeholder_population, other_pat) ~ "Other_actors",
       TRUE ~ stakeholder_population
     )
   ) %>%
@@ -314,6 +328,60 @@ sys_actor_subset <- sys_map_data %>%
     values_fn   = ~ as.integer(any(. == 1))
   )
 
+#calculate number and percentage of studies that focused on practitioners
+sys_actor_subset%>%
+  summarise(n_practitioners=sum(Practitioners),
+            perc_practitioners=(n_practitioners/167)*100)
+
+#calculate number and percentage of studies that only focused on practitioners
+sys_actor_subset%>%
+  filter(Practitioners==1)%>%
+  mutate(only_practitioners=if_else(rowSums(across(-rayyan_key))==1,1,0))%>%
+  summarise(n_only_practitioners=sum(only_practitioners),
+            perc_only_practitioners=(n_only_practitioners/167)*100)
+
+#calculate number and percentage of studies that focussed on researchers
+sys_actor_subset%>%
+  summarise(n_researchers=sum(Researchers),
+            perc_Researchers=(n_researchers/167)*100)
+
+#calculate number and percentage of studies that focussed on policymakers
+sys_actor_subset%>%
+  summarise(n_policymakers=sum(Policymakers),
+            perc_policymakers=(n_policymakers/167)*100)
+
+#calculate number and percentage of studies that focussed on policymakers
+sys_actor_subset%>%
+  summarise(n_other=sum(Other_actors),
+            perc_other=(n_other/167)*100)
+
+#count number and percentage of studies with more than one actor type
+sys_actor_subset%>%
+  mutate(n_actor_types=rowSums(across(-rayyan_key)))%>%
+  filter(n_actor_types>1)%>%
+  summarise(n_multi_actor_studies=n(),
+            perc_multi_actor_studies=(n_multi_actor_studies/167)*100)
+
+#count number and percentage of studies with only practitioners and researchers as actors
+sys_actor_subset%>%
+  filter(Practitioners==1,Researchers==1)%>%
+  mutate(only_prac_research=if_else(rowSums(across(-rayyan_key))==2,1,0))%>%
+  summarise(n_pract_researchers=sum(only_prac_research),
+            perc_pract_researchers=(n_pract_researchers/167)*100)
+
+#count number and percentage of studies with only practitioners, researchers, and policymakers as actors
+sys_actor_subset%>%
+  filter(Practitioners==1,Researchers==1,Policymakers==1)%>%
+  mutate(only_prac_research_policy=if_else(rowSums(across(-rayyan_key))==3,1,0))%>%
+  summarise(n_pract_researchers=sum(only_prac_research_policy),
+            perc_pract_researchers=(n_pract_researchers/167)*100)
+
+#count number and percentage of studies with only researchers and policymakers as actors
+sys_actor_subset%>%
+  filter(Researchers==1,Policymakers==1)%>%
+  mutate(only_prac_research_policy=if_else(rowSums(across(-rayyan_key))==2,1,0))%>%
+  summarise(n_pract_researchers=sum(only_prac_research_policy),
+            perc_pract_researchers=(n_pract_researchers/167)*100)
 
 #second data for organisations
 
@@ -413,7 +481,7 @@ names(Organisation_matrix)
 
 #first for actors
 #remove the 'rayyan key' category
-actors<-colnames(sys_actor_subset)[c(-1)]
+inte<-colnames(sys_actor_subset)[c(-1)]
 sys_actor_subset_bool <- sys_actor_subset %>%
   mutate(across(-rayyan_key, ~ .x == 1L))%>%
   select(!rayyan_key)
@@ -439,8 +507,23 @@ organisation_upset<-upset(Organisation_matrix_bool, organisations, name='Organis
                             'ngo_non_profit'='NGO/non profit',
                             'academic_institution'='Academic institution',
                             "other"="Other"
-                          )))+theme(text=element_text(size=10))
+                          )),
+                          themes=upset_modify_themes(
+                            list(
+                              "default"=theme(
+                                text=element_text(size=10),
+                                axis.line = element_line(colour = "black"),
+                                panel.grid.major = element_blank(),
+                                panel.grid.minor = element_blank(),
+                                panel.border = element_blank(),
+                                panel.background = element_blank(),
+                                plot.margin = margin(0, 0, 0, 0, "cm"),
+                                
+                            )))
+                          )
 organisation_upset
+
+names(upset_themes)
 
 #join these plots together for figure 2
 plot_grid(actors_upset,organisation_upset,ncol=2,labels=c("(a)","(b)"),
@@ -759,8 +842,9 @@ ggplot(factors_over_time_cum,aes(x=year,y=cum_studies,colour=category))+
   theme_cowplot()+
   labs(x="Publication year",y="Cumulative number of studies")+
   scale_colour_carto_d(palette = "ag_Sunset",name="Factor category")+
-  scale_x_continuous(limits = c(min(factors_over_time_cum$year),
-                                max(factors_over_time_cum$year)+1))+
+  scale_x_continuous(limits = c(min(factors_over_time_cum$year)-1,
+                                max(factors_over_time_cum$year)+1),
+                     breaks=c(2000,2005,2010,2015,2020,2025))+
   theme(axis.text=element_text(size=10),
         axis.title=element_text(size=12),
         legend.text=element_text(size=10),
@@ -775,102 +859,25 @@ ggsave("figures/figure_4_factors_over_time.png",
        units="cm",
        dpi=300)
 
+#calculate the number of studies per year for each of the four main categories
+factors_over_time_summary <- clean_factors_data_studies %>%
+  filter(category != "Characteristics of other stakeholders") %>%
+  mutate(category = fct_drop(category)) %>%
+  group_by(year, category) %>%
+  summarise(n_studies = n_distinct(rayyan_key), .groups = "drop") %>%
+  complete(
+    year = full_seq(range(year, na.rm = TRUE), 1),
+    category = unique(category),
+    fill = list(n_studies = 0)
+  ) %>%
+  arrange(year, category)%>%
+  group_by(category)%>%
+  summarise(total_studies=sum(n_studies/21))%>%
+  arrange(desc(total_studies))
 
-###################################################
-# figure 5 - cluster analysis using nmds etc ######
-###################################################
-
-factor_matrix <- clean_factors_data %>%
-  mutate(present = 1L) %>%
-  pivot_wider(
-    id_cols= rayyan_key,
-    names_from  = factors_influencing_evidence_use,
-    values_from = present,
-    values_fill = 0
-  )
-
-#count number of times factors are mentioned in total
-factor_sums <- colSums(factor_matrix[,-1])
-
-#drop factors mentioned in less than 5 studies
-factors_to_keep <- names(factor_sums[factor_sums >= 5])
-
-factor_matrix_clean <- factor_matrix %>%
-  select(rayyan_key, all_of(factors_to_keep))
-
-#drop columns that aren't needed
-factor_matrix_wide <- factor_matrix_clean %>%
-  select(-rayyan_key,)
-
-#clean column names
-factor_matrix_wide2 <- factor_matrix_wide %>%
-  rename_with(~ str_trim(.x)) %>%
-  rename_with(~ str_replace_all(.x, "[ .\\/-]+", "_")) %>%
-  rename_with(~ str_replace_all(.x, "_+", "_")) %>%
-  rename_with(~ str_replace_all(.x, "^_|_$", "")) %>%
-  rename_with(~ str_to_lower(.x))
-
-# Jaccard distance on presence/absence data
-factor_dist <- vegdist(
-  factor_matrix_wide2,
-  method = "jaccard",
-  binary = TRUE
-)
-
-
-nmds_factors <- metaMDS(
-  factor_matrix_wide2,
-  distance = "jaccard",
-  binary = TRUE,
-  k = 2,            # start with 2D
-  trymax = 100
-)
-
-#check stress
-nmds_factors$stress
-
-#hierarchical clustering
-hc_factors <- hclust(factor_dist, method = "average")
-
-#choose number of clusters
-for (k in 3:6) {
-  cat("\n--- k =", k, "---\n")
-  print(table(cutree(hc_factors, k = k)))
-}
-
-#plot the nmds result
-nmds_scores <- as.data.frame(scores(nmds_factors, display = "sites"))
-nmds_scores$rayyan_key <- factor_matrix$rayyan_key
-
-ggplot(nmds_scores, aes(x = NMDS1, y = NMDS2)) +
-  geom_point(alpha = 0.7, size = 2) +
-  coord_equal() +
-  theme_bw() +
-  labs(
-    title = "NMDS of studies based on factors influencing evidence use",
-    subtitle = paste("Stress =", round(nmds_factors$stress, 3))
-  )
-
-
-#run a 3d NMDS as a sensitivity analysis
-nmds_3d <- metaMDS(
-  factor_matrix_wide2,
-  distance = "jaccard",
-  binary = TRUE,
-  k = 3,
-  trymax = 100
-)
-
-nmds_3d$stress
-#stress is now lower
-
-nrow(factor_matrix_wide2)
-nrow(unique(factor_matrix_wide2))
-
-rowSums(factor_matrix_wide2) |> summary()
 
 ##################################################
-#Supplementary figures############################
+#Supplementary figures and summary stats##########
 ##################################################
 
 #figure S1 - bar chart with types of scientific evidence considered
@@ -920,10 +927,12 @@ discipline_plot<-ggplot(sys_discipline_summary,aes(x=reorder(evidence_discipline
   theme_cowplot()+
   coord_flip()+
   labs(x="Discipline of scientific evidence",y="Percentage of studies (%)")+
-  scale_fill_carto_d(palette = "Vivid")+
   theme(legend.position = "none",
         axis.text=element_text(size=12),
-        axis.title=element_text(size=14))
+        axis.title=element_text(size=12))
+
+#save plot
+ggsave("figures/figure_S1.png",plot=discipline_plot,width=20,height=12,units="cm",dpi=300)
 
 #figure S3
 
@@ -961,46 +970,41 @@ ggplot(factors_per_study,aes(x=n_factors))+
        y="Number of studies")+
   scale_x_continuous(breaks=seq(0,15,1))
 
-##############################################
-#extra figures for bes talk###################
-##############################################
+#calculate mean and median number of factors per study using tidyverse
+#and standard deviation
+factors_per_study%>%
+  summarise(mean_factors=mean(n_factors),
+            median_factors=median(n_factors),
+            sd_factors=sd(n_factors))
 
+#calculate the percentage of studies that identified more than 10 factors
+factors_per_study%>%
+  filter(n_factors>=10)%>%
+  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
 
-#load data from bluesky polls
-aim_poll<-read.csv("data/bluesky_poll_1.csv")
-practice_poll<-read.csv("data/bluesky_poll_2.csv")
-head(practice_poll)
+#calculate the percentage of studies that identified fewer than 3 factors
+factors_per_study%>%
+  filter(n_factors<3)%>%
+  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
 
-#plot this data as barplots
-#keeping order of responses the same as in dataframe
+#now focus on the scale of studies
 
+#calculate the percentage of studies for each category of spatial scale
+#first remove any blank rows
+sys_scale_subset<-sys_map_data%>%
+  select(scale_of_study)%>%
+  filter(!is.na(scale_of_study))
 
-ggplot(aim_poll,aes(y = fct_rev(Response), x = Perc)) +
-  geom_bar(stat="identity",fill="#1184fd",alpha=0.8) +
-  labs(y = "Response", x = "Pecentage of respondants") +
-  theme_cowplot()+
-  theme(axis.text = element_text(size=20),
-        axis.title = element_text(size=22,face="bold"))
+#calculate percentage of studies for each category of spatial scale
+sys_scale_subset%>%
+  group_by(scale_of_study)%>%
+  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
+  
+#now focus on the scale of decision-making
+#calculate the percentage of studies for each category of decision-making scale
+#first remove any blank rows
+sys_map_data%>%
+  group_by(scale_of_decision_making)%>%
+  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
 
-ggsave("figures/for_talk/bluesky_1.png",
-       width=30,
-       height=16,
-       units="cm",
-       dpi=300)
-
-#do the same for the data on evidence use
-practice_poll%>%
-  mutate(Response=as.factor(Response),
-         Response=fct_relevel(Response,"Yes","No","Maybe"))%>%
-  ggplot(aes(y = fct_rev(Response), x = Perc)) +
-  geom_bar(stat="identity",fill="#1184fd",alpha=0.8) +
-  labs(y = "Response", x = "Pecentage of respondants") +
-  theme_cowplot()+
-  theme(axis.text = element_text(size=20),
-        axis.title = element_text(size=22,face="bold"))
-
-ggsave("figures/for_talk/bluesky_2.png",
-       width=30,
-       height=16,
-       units="cm",
-       dpi=300)
+  
