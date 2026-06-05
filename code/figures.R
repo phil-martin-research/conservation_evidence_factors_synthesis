@@ -1,6 +1,5 @@
 # this script produces all the figures and analyses for the 
 # systematic map manuscript on evidence use in conservation
-# small edit
 
 #first load packages
 pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
@@ -120,8 +119,6 @@ sys_location_subset_continent%>%
   mutate(perc_studies=(n_studies/475)*100)%>%
   print(n=10)
 
-
-
 #add ISO3 country name
 sys_location_subset_count$iso_a3_eh<-countrycode(sys_location_subset_count$location_std,origin = "country.name",destination = "iso3c")
 #manually fix code for Saint Martin
@@ -180,6 +177,7 @@ sys_biome_subset <- sys_map_data %>%
   group_by(biome_std) %>%
   summarise(
     perc_studies = (n() / no_studies) * 100,
+    n_studies=n(),
     .groups = "drop"
   ) %>%
   arrange(desc(perc_studies))
@@ -255,7 +253,9 @@ out <- sys_map_data %>%
     )
   ) %>%
   group_by(conservation_problem_std) %>%
-  summarise(perc_studies = (n() / no_studies) * 100, .groups = "drop") %>%
+  summarise(perc_studies = (n() / no_studies) * 100, 
+            n_studies=n(),
+            .groups = "drop") %>%
   arrange(desc(perc_studies))
 
 #plot conservation problem data
@@ -385,10 +385,6 @@ sys_actor_subset%>%
 
 #second data for organisations
 
-dput(sys_map_data)
-
-write_csv(sys_map_data,"data/sys_map_data_dput.csv")
-
 #list unique values for organisation types
 Organisation_matrix <- sys_map_data %>%
   select(rayyan_key, type_of_organisation_studied) %>%
@@ -482,6 +478,7 @@ names(Organisation_matrix)
 #first for actors
 #remove the 'rayyan key' category
 inte<-colnames(sys_actor_subset)[c(-1)]
+head(sys_actor_subset_bool)
 sys_actor_subset_bool <- sys_actor_subset %>%
   mutate(across(-rayyan_key, ~ .x == 1L))%>%
   select(!rayyan_key)
@@ -890,7 +887,8 @@ sys_evidence_subset<-sys_map_data%>%
 sys_evidence_summary<-sys_evidence_subset%>%
   separate_longer_delim(type_of_scientific_evidence,delim=", ")%>%
   group_by(type_of_scientific_evidence)%>%
-  summarise(perc_studies=(n()/nrow(sys_map_data))*100)%>%
+  summarise(perc_studies=(n()/nrow(sys_map_data))*100,
+            no_studies=n())%>%
   ungroup()%>%
   arrange(desc(perc_studies))
 
@@ -917,7 +915,8 @@ sys_discipline_subset<-sys_map_data%>%
 sys_discipline_summary<-sys_discipline_subset%>%
   separate_longer_delim(evidence_discipline,delim=", ")%>%
   group_by(evidence_discipline)%>%
-  summarise(perc_studies=(n()/nrow(sys_map_data))*100)%>%
+  summarise(perc_studies=(n()/nrow(sys_map_data))*100,
+            n_studies=n())%>%
   ungroup()%>%
   arrange(desc(perc_studies))
 
