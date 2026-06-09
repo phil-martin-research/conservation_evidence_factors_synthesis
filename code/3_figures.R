@@ -11,6 +11,8 @@ pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
 
 #load data
 study_loc_counts<-read_csv("data/processed/study_location_counts.csv")
+biome_counts<-read_csv("data/processed/study_biome_counts.csv")
+con_prob_counts<-read_csv("data/processed/study_con_prob_counts.csv")
 
 ########################################################
 #1 - Figure 1 - Study context###########################
@@ -24,9 +26,6 @@ world<-ne_countries(scale="medium",returnclass = "sf")
 #join geocoded data to shapefile
 world_map_join<-world%>%
   left_join(study_loc_counts,by = "iso_a3_eh",keep=FALSE)
-
-study_loc_counts%>%
-  print(n=150)
 
 #plot map
 location_plot<-ggplot(world_map_join,aes(fill=n_studies))+
@@ -46,14 +45,7 @@ location_plot<-ggplot(world_map_join,aes(fill=n_studies))+
   scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25,30,35,40))
 
 #figure 1b - bar chart of biomes in which studies were done
-#count percentage of studies per biome
-
-
-
-
-
-#plot biome data
-biome_plot<-ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),y=perc_studies))+
+biome_plot<-ggplot(biome_counts,aes(x=reorder(biome_std,perc_studies),y=perc_studies))+
   geom_bar(stat="identity")+
   theme_cowplot()+
   coord_flip()+
@@ -63,62 +55,7 @@ biome_plot<-ggplot(sys_biome_subset,aes(x=reorder(biome_std,perc_studies),y=perc
         axis.title=element_text(size=14))
 
 #figure 1c - bar chart with conservation problems addressed in studies
-
-#calculate percentage of studies per conservation problem
-
-sys_map_data%>%
-  filter(!is.na(conservation_problem))%>%
-  separate_rows(conservation_problem, sep = ",\\s*")%>%
-  select(conservation_problem)%>%
-  distinct()%>%
-  print(n=100)
-
-
-#reclassify categories
-out <- sys_map_data %>%
-  separate_rows(conservation_problem, sep = ",\\s*") %>%
-  filter(!is.na(conservation_problem), conservation_problem != "") %>%
-  mutate(conservation_problem = str_trim(conservation_problem)) %>%
-  mutate(
-    conservation_problem_std = case_when(
-      str_detect(conservation_problem, regex("land[- ]?use change", ignore_case = TRUE)) ~ "Land use change",
-      str_to_lower(conservation_problem) %in% str_to_lower(c(
-        "habitat degradation","Forest restoration","Agriculture impacts","Marine spatial planning",
-        "Urbanisation","Restoration","Ecosystem restoration","Infrastructure"
-      )) ~ "Land use change",
-      str_to_lower(conservation_problem) %in% str_to_lower(c(
-        "Sustainable shark fisheries","Overfishing"
-      )) ~ "Overexploitation",
-      
-      str_to_lower(conservation_problem) %in% str_to_lower(c("climate change mitigation","climate change impacts","Climate Change")) ~ "Climate change",
-      str_to_lower(conservation_problem) %in% str_to_lower(c("Protected area managment","wetland conservation",
-                                                             "Marie Protected Area management","Multiple: forest management and governdance",
-                                                             "Not mentioned","managment of protected forests",
-                                                             "Assessment of conservation status","Plant reintroduction",
-                                                             "Forest managment","Protected area designation","Protected areas management",
-                                                             "Natural resource management","Endangered species managemnt",
-                                                             "Biodiversity proected","Development of decision-support tools",
-                                                             "Protected area management","River management","River regulation"
-      )) ~ "Not reported",
-      str_to_lower(conservation_problem) %in% str_to_lower(c("Eutrophication")) ~ "Pollution",
-      
-      str_to_lower(conservation_problem) %in% str_to_lower(c(
-        "Water use","Human-wildlife conflict","Fire",
-        "Identification of vulnerable ecosystems","Predation of birds","Pest control","GMOs","Species conservation prioritisation",
-        "Various: Grazing impacts of reindeer"
-      )) ~ "Other",
-      
-      TRUE ~ conservation_problem
-    )
-  ) %>%
-  group_by(conservation_problem_std) %>%
-  summarise(perc_studies = (n() / no_studies) * 100, 
-            n_studies=n(),
-            .groups = "drop") %>%
-  arrange(desc(perc_studies))
-
-#plot conservation problem data
-conservation_problem_plot<-ggplot(out,aes(x=reorder(conservation_problem_std,perc_studies),y=perc_studies))+
+conservation_problem_plot<-ggplot(con_prob_counts,aes(x=reorder(conservation_problem_std,perc_studies),y=perc_studies))+
   geom_bar(stat="identity")+
   theme_cowplot()+
   coord_flip()+
