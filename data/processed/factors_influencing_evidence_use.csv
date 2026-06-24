@@ -1,0 +1,50 @@
+"factors_influencing_evidence_use","n_mentions","perc_mentions","category","subcategory","factors_label"
+"Scientist-actor relationships",84,49.7041420118343,"Relationships","Academic-practitioner links and relationships","Scientist-actor"
+"Relevance",81,47.9289940828402,"Characteristics of evidence","Relevance and applicability","Relevance"
+"Capacity and resources",59,34.9112426035503,"Practitioner/policymaker characteristics,
+organisation, and decisions","Capacity, resources and finance","Capacity & resources"
+"Social, political, and economic context",56,33.1360946745562,"Practitioner/policymaker characteristics,
+organisation, and decisions","Social, political and economic context","Social, political,& economic context"
+"Format and language",53,31.3609467455621,"Characteristics of evidence","Accessibility","Format & language"
+"Rigour",50,29.585798816568,"Characteristics of evidence","Quality, credibility and legitimacy of evidence","Rigour"
+"Accessibility of evidence",49,28.9940828402367,"Characteristics of evidence","Accessibility","Accessibility"
+"Practitioner/policymaker research skills",44,26.0355029585799,"Practitioner/policymaker characteristics,
+organisation, and decisions","Skills","Research skills"
+"Uncertainty",37,21.8934911242604,"Characteristics of evidence","Quality, credibility and legitimacy of evidence","Uncertainty"
+"Practitioner/policmaker attitude towards evidence use",36,21.301775147929,"Practitioner/policymaker characteristics,
+organisation, and decisions","Attitude about research and research use","Attitude to evidence use"
+"Existence of evidence",35,20.7100591715976,"Characteristics of evidence","Existence of scientific information","Existence"
+"Timeliness of evidence",33,19.5266272189349,"Practitioner/policymaker characteristics,
+organisation, and decisions","Implementation capacity","Timeliness"
+"Source of evidence",24,14.2011834319527,"Characteristics of evidence","Quality, credibility and legitimacy of evidence","Source"
+"Relationships between colleagues",20,11.8343195266272,"Relationships","Relationship between colleagues","Between colleagues"
+"Spatial/temporal scale of evidence",20,11.8343195266272,"Characteristics of evidence","Quality, credibility and legitimacy of evidence","Spatial/temporal scale"
+"Practitioner/policymaker-stakeholder relationships",19,11.2426035502959,"Relationships","Practitioner-stakeholder relationships","Practitioner-stakeholder"
+"Time lag",18,10.6508875739645,"Characteristics of evidence","Accessibility","Time lag"
+"Other stakeholder values and beliefs",16,9.46745562130178,"Characteristics of other stakeholders","Stakeholders’ attitude, values and beliefs","Other stakeholder values"
+"Management",15,8.87573964497041,"Practitioner/policymaker characteristics,
+organisation, and decisions","Organizational internal management, structure and process","Management"
+"Practitioner/policymaker personal characteristics",15,8.87573964497041,"Practitioner/policymaker characteristics,
+organisation, and decisions","Personal characteristics","Personal characteristics"
+"Quantity of information",14,8.28402366863905,"Characteristics of evidence","Accessibility","Quantity of information"
+"Researcher skills and awareness",14,8.28402366863905,"Researcher &
+research organisations","Skills and awareness","Skills & awareness"
+"Implementation capacity",13,7.69230769230769,"Practitioner/policymaker characteristics,
+organisation, and decisions","Implementation capacity","Implementation capacity"
+"Language barrier",12,7.10059171597633,"Characteristics of evidence","Accessibility","Language barrier"
+"Culture of practitioner/policymakers",10,5.91715976331361,"Practitioner/policymaker characteristics,
+organisation, and decisions","Culture of practitioners ","Culture"
+"Nature of decision",10,5.91715976331361,"Practitioner/policymaker characteristics,
+organisation, and decisions","Nature of decision or issue  ","Nature of decision"
+"Practitioner/policymaker decision process",10,5.91715976331361,"Practitioner/policymaker characteristics,
+organisation, and decisions","Management decision process and behavior","Decision process"
+"Practitioner/policymaker awareness of evidence",9,5.32544378698225,"Practitioner/policymaker characteristics,
+organisation, and decisions","Awareness","Awareness of evidence"
+"Academic demands on researchers",7,4.14201183431953,"Researcher &
+research organisations","Academic demands of researchers","Academic demands"
+"Inconclusive",6,3.55029585798817,"Characteristics of evidence","Quality, credibility and legitimacy of evidence","Conclusiveness"
+"Culture of researchers",5,2.9585798816568,"Researcher &
+research organisations","Culture of researchers ","Culture"
+"Researcher attitude towards evidence use",2,1.18343195266272,"Researcher &
+research organisations","Attitude towards research use","Attitude to evidence use"
+"Difficult to find",1,0.591715976331361,"Characteristics of evidence","Accessibility","Difficulty finding evidence"
