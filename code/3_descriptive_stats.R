@@ -10,6 +10,7 @@ cleaned_data<-read_csv("data/processed/cleaned_data.csv")
 location_count<-read_csv("data/processed/study_location_counts.csv")
 actor_data<-read_csv("data/processed/study_actor_counts.csv")
 factors_over_time<-read_csv("data/processed/factors_over_time_cumulative.csv")
+organisation_data<-read_csv("data/processed/study_organisation_counts.csv")
 
 #study context
 
@@ -30,7 +31,7 @@ cleaned_data|>
   print(n=10)
 
 #calculate the mean number of biomes per study
-sys_map_data|>
+cleaned_data|>
   filter(!is.na(biome), biome != "") |>
   separate_rows(biome, sep = ",\\s*") |>
   filter(biome!="Not reported",biome!="not reported",biome!="Not mentioned")|>
@@ -95,24 +96,15 @@ actor_data|>
   summarise(n_policy_researchers=sum(only_research_policy),
             perc_policy_researchers=(n_policy_researchers/167)*100)
 
-#calculate the number of studies per year for each of the four main categories
-factors_over_time_summary <- clean_factors_data_studies %>%
-  filter(category != "Characteristics of other stakeholders") %>%
-  mutate(category = fct_drop(category)) %>%
-  group_by(year, category) %>%
-  summarise(n_studies = n_distinct(rayyan_key), .groups = "drop") %>%
-  complete(
-    year = full_seq(range(year, na.rm = TRUE), 1),
-    category = unique(category),
-    fill = list(n_studies = 0)
-  ) %>%
-  arrange(year, category)%>%
-  group_by(category)%>%
-  summarise(total_studies=sum(n_studies/21))%>%
-  arrange(desc(total_studies))
+
+#calculate the number and percentage of studies that focus on the different organisation types
+organisation_data|>
+  summarise(across(government_statutory_body:ngo_non_profit,sum))|>
+  pivot_longer(government_statutory_body:ngo_non_profit)|>
+  mutate(perc=(value/167)*100)
 
 #count number of factors identified per study
-factors_per_study <- sys_map_data %>%
+factors_per_study <- cleaned_data %>%
   select(rayyan_key, factors_influencing_evidence_use) %>%
   filter(!is.na(factors_influencing_evidence_use)) %>%
   # Protect the multi-comma phrase with a token that has no commas
@@ -147,29 +139,29 @@ factors_per_study%>%
 #calculate the percentage of studies that identified more than 10 factors
 factors_per_study%>%
   filter(n_factors>=10)%>%
-  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
+  summarise(perc_studies=(n()/nrow(cleaned_data))*100)
 
 #calculate the percentage of studies that identified fewer than 3 factors
 factors_per_study%>%
   filter(n_factors<3)%>%
-  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
+  summarise(perc_studies=(n()/nrow(cleaned_data))*100)
 
 #now focus on the scale of studies
 
 #calculate the percentage of studies for each category of spatial scale
 #first remove any blank rows
-sys_scale_subset<-sys_map_data%>%
+sys_scale_subset<-cleaned_data%>%
   select(scale_of_study)%>%
   filter(!is.na(scale_of_study))
 
 #calculate percentage of studies for each category of spatial scale
 sys_scale_subset%>%
   group_by(scale_of_study)%>%
-  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
+  summarise(perc_studies=(n()/nrow(cleaned_data))*100)
 
 #now focus on the scale of decision-making
 #calculate the percentage of studies for each category of decision-making scale
 #first remove any blank rows
-sys_map_data%>%
+cleaned_data%>%
   group_by(scale_of_decision_making)%>%
-  summarise(perc_studies=(n()/nrow(sys_map_data))*100)
+  summarise(perc_studies=(n()/nrow(cleaned_data))*100)
