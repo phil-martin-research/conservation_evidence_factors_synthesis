@@ -10,7 +10,7 @@ pacman::p_load(tidyverse,ggtext,ggspatial,cowplot,lemon,ggmap,scales,sf,
                tidytext,forcats,grid,gridExtra,grateful,vegan,patchwork)
 
 #load data
-sys_map_data<-read.csv("data/extracted_data_2026_01_21.csv")
+sys_map_data<-read.csv("data/raw/extracted_data.csv")
 study_loc_counts<-read_csv("data/processed/study_location_counts.csv")
 biome_counts<-read_csv("data/processed/study_biome_counts.csv")
 con_prob_counts<-read_csv("data/processed/study_con_prob_counts.csv")
@@ -47,7 +47,7 @@ location_plot<-ggplot(world_map_join,aes(fill=n_studies))+
         legend.text=element_text(size=12),
         legend.title=element_text(size=12))+
   coord_sf(xlim = c(-180,180),ylim=c(-55,85),expand = FALSE)+
-  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,5,10,15,20,25,30,35,40))
+  scale_fill_carto_c(palette = "Purp",name="No. of studies",breaks=c(0,10,20,30,40,50))
 
 #figure 1b - bar chart of biomes in which studies were done
 biome_plot<-ggplot(biome_counts,aes(x=reorder(biome_std,perc_studies),y=perc_studies))+
@@ -72,9 +72,11 @@ conservation_problem_plot<-ggplot(con_prob_counts,aes(x=reorder(conservation_pro
 #combine all of these into figure 1
 
 #first combine plots b and c
-location_plot/(biome_plot+conservation_problem_plot)+plot_layout(ncol=1,heights=c(1,0.7))+
-  plot_annotation(tag_levels = 'a',tag_prefix = "(",tag_suffix = ")")
+biome_threat<-plot_grid(biome_plot,conservation_problem_plot,ncol=2,labels=c("(b)","(c)"),
+                        label_size = 12,rel_widths=c(1,1))
 
+map_biome_threat<-plot_grid(location_plot,biome_threat,ncol=1,labels=c("(a)",""),
+                            label_size = 12,rel_heights = c(1,0.7))
 #save figure 1
 ggsave("figures/figure_1_study_context.png",
        plot=map_biome_threat,
@@ -101,19 +103,36 @@ actors<-colnames(sys_actor_subset_bool)
 
 actors_upset<-upset(sys_actor_subset_bool, actors, name='Actor type', width_ratio=0.1,
                     # with manual aes specification:
-                    base_annotations=list('Number of studies'=(intersection_size(counts=FALSE))),
-                    set_sizes=FALSE)+theme(text=element_text(size=10))
+                    base_annotations = list("Number of studies" =
+                      intersection_size(counts = FALSE) +
+                      scale_y_continuous(expand = expansion(mult = c(0, 0.05)))),
+                    set_sizes=FALSE,
+                    themes=upset_modify_themes(
+                      list(
+                        "default"=theme(
+                          text=element_text(size=10),
+                          axis.line = element_line(colour = "black"),
+                          panel.grid.major = element_blank(),
+                          panel.grid.minor = element_blank(),
+                          panel.border = element_blank(),
+                          panel.background = element_blank(),
+                          plot.margin = margin(0, 0, 0, 0, "cm")
+                        ))))
 
 #then for organisations
 
 #remove the category "Not_detailed" and the study ID
 organisations<-colnames(organisation_data)[c(-1,-5)]
-Organisation_matrix_bool <- Organisation_matrix %>%
+Organisation_matrix_bool <- organisation_data %>%
   mutate(across(-rayyan_key, ~ .x == 1L))
 
 #plot this
-organisation_upset<-upset(Organisation_matrix_bool, organisations, name='Organisation type', width_ratio=0.1,
-                          base_annotations=list('Number of studies'=(intersection_size(counts=FALSE))),
+organisation_upset<-upset(Organisation_matrix_bool, organisations, 
+                          name='Organisation type', width_ratio=0.1,
+                          base_annotations = list("Number of studies" =
+                              intersection_size(counts = FALSE) +
+                              scale_y_continuous(expand = expansion(mult = c(0, 0.05)))+
+                                theme(axis.title.y = element_text(margin = margin(r = -20, unit = "pt")))),
                           set_sizes=FALSE,
                           labeller=ggplot2::as_labeller(c(
                             'government_statutory_body'='Government/statutory body',
@@ -130,8 +149,7 @@ organisation_upset<-upset(Organisation_matrix_bool, organisations, name='Organis
                                 panel.grid.minor = element_blank(),
                                 panel.border = element_blank(),
                                 panel.background = element_blank(),
-                                plot.margin = margin(0, 0, 0, 0, "cm"),
-                                
+                                plot.margin = margin(0, 0, 0, 0, "cm")
                             )))
                           )
 
@@ -151,6 +169,8 @@ ggsave("figures/figure_2_actors_organisations.png",
 ########################################################################
 
 #plot data for factors influencing evidence use
+
+mentions_factors_categories
 
 #just plot relationships category
 relationship_plot<-mentions_factors_categories%>%
@@ -239,16 +259,15 @@ ggsave("figures/figure_3_factors_coloured.png",
 #figure 4 - Changes in factors studied over time###
 ###################################################
 
-
 #plot this
-ggplot(factors_over_time,aes(x=year,y=cum_studies,colour=category))+
+ggplot(data=factors_over_time,aes(x=year,y=cum_studies,colour=category))+
   geom_line(linewidth=1,alpha=0.5)+
   geom_point(size=3,alpha=0.5)+
   theme_cowplot()+
   labs(x="Publication year",y="Cumulative number of studies")+
   scale_colour_carto_d(palette = "ag_Sunset",name="Factor category")+
-  scale_x_continuous(limits = c(min(factors_over_time_cum$year)-1,
-                                max(factors_over_time_cum$year)+1),
+  scale_x_continuous(limits = c(min(factors_over_time$year)-1,
+                                max(factors_over_time$year)+1),
                      breaks=c(2000,2005,2010,2015,2020,2025))+
   theme(axis.text=element_text(size=10),
         axis.title=element_text(size=12),
@@ -273,20 +292,20 @@ ggsave("figures/figure_4_factors_over_time.png",
 #figure S2 - bar chart with the different types of discipline considered
 
 sys_discipline_subset<-sys_map_data%>%
-  select(evidence_discipline)%>%
-  filter(!is.na(evidence_discipline))
+  select(Evidence.discipline)%>%
+  filter(!is.na(Evidence.discipline))
 
 #calculate percentage of studies per type of discipline considered
 sys_discipline_summary<-sys_discipline_subset%>%
-  separate_longer_delim(evidence_discipline,delim=", ")%>%
-  group_by(evidence_discipline)%>%
+  separate_longer_delim(Evidence.discipline,delim=", ")%>%
+  group_by(Evidence.discipline)%>%
   summarise(perc_studies=(n()/nrow(sys_map_data))*100,
             n_studies=n())%>%
   ungroup()%>%
   arrange(desc(perc_studies))
 
 #plot discipline data
-discipline_plot<-ggplot(sys_discipline_summary,aes(x=reorder(evidence_discipline,perc_studies),y=perc_studies))+
+discipline_plot<-ggplot(sys_discipline_summary,aes(x=reorder(Evidence.discipline,perc_studies),y=perc_studies))+
   geom_bar(stat="identity")+
   theme_cowplot()+
   coord_flip()+

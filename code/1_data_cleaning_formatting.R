@@ -7,9 +7,9 @@ pacman::p_load(tidyverse,countrycode,rnaturalearth,rnaturalearthdata,
                tidyr,tidytext,forcats)
 
 #load data
-sys_map_data<-read.csv("data/extracted_data_2026_01_21.csv")
-factor_categories<-read.csv("data/evidence_factor_categories.csv")
-articles<-read.csv("data/articles_2026_01_26.csv")
+sys_map_data<-read.csv("data/raw/extracted_data.csv")
+factor_categories<-read.csv("data/raw/evidence_factor_categories.csv")
+articles<-read.csv("data//raw/articles.csv")
 
 #########################################################
 # 1- Tidy and clean data#################################
@@ -535,8 +535,6 @@ clean_factors_data_studies<-clean_factors_data%>%
   select(rayyan_key,factors_influencing_evidence_use,category,year)
 
 #now count the number of studies per category per year
-unique(factors_over_time$category)
-
 factors_over_time <- clean_factors_data_studies %>%
   filter(category != "Characteristics of other stakeholders") %>%
   mutate(category = fct_drop(category)) %>%
