@@ -177,7 +177,7 @@ relationship_plot<-mentions_factors_categories%>%
   filter(category!="Characteristics of other stakeholders")%>%
   filter(category=="Relationships")%>%
   mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
-  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  ggplot(aes(y = factors_label, x = perc_mentions)) +
   geom_bar(stat="identity",fill="#FA7876",alpha=0.8) +
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
@@ -191,7 +191,7 @@ evidence_plot<-mentions_factors_categories%>%
   filter(category!="Characteristics of other stakeholders")%>%
   filter(category=="Characteristics of evidence")%>%
   mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
-  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  ggplot(aes(y = factors_label, x = perc_mentions)) +
   geom_bar(stat="identity",fill="#4B2991",alpha=0.8) +
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
@@ -205,7 +205,7 @@ actor_plot<-mentions_factors_categories%>%
   filter(category!="Characteristics of other stakeholders")%>%
   filter(category=="Practitioner/policymaker characteristics,\r\norganisation, and decisions")%>%
   mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
-  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  ggplot(aes(y = factors_label, x = perc_mentions)) +
   geom_bar(stat="identity",fill="#C0369D",alpha=0.8) +
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
@@ -219,7 +219,7 @@ researcher_plot<-mentions_factors_categories%>%
   filter(category!="Characteristics of other stakeholders")%>%
   filter(category=="Researcher &\r\nresearch organisations")%>%
   mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
-  ggplot(aes(y = factors_label, perc_mentions), x = perc_mentions) +
+  ggplot(aes(y = factors_label, x = perc_mentions)) +
   geom_bar(stat="identity",fill="#EDD9A3",alpha=0.8)+
   labs(y = "Factor impacting evidence use", x = "Pecentage of studies mentioning factor") +
   theme_cowplot()+
@@ -238,7 +238,7 @@ combined_factor_plot<-plot_grid(actor_plot,evidence_plot,researcher_plot, relati
 y.grob <- textGrob("Factor impacting evidence use", 
                    gp=gpar(fontface="bold",fontsize=14), rot=90)
 
-x.grob <- textGrob("                             Pecentage of studies mentioning factor", 
+x.grob <- textGrob("Pecentage of studies mentioning factor", 
                    gp=gpar(fontface="bold", fontsize=14))
 
 #add to plot
@@ -254,6 +254,72 @@ ggsave("figures/figure_3_factors_coloured.png",
        units="cm",
        dpi=300)
 
+
+mentions_factors_categories$factors_label
+#make a simple version for the graphical abstract just including the top 6 factors
+mentions_factors_categories%>%
+  # remove \r\n from the category names and replace with \n
+  mutate(category = str_replace_all(category, "\r\n", "\n"))%>%
+  #change Practitioner/policymaker characteristics,\norganisation, and decisions to Practitioner/policymaker characteristics
+  mutate(category = str_replace_all(category, "Practitioner/policymaker characteristics,\norganisation, and decisions", "Practitioners & policymakers"))%>%
+  mutate(category = str_replace_all(category, "Researcher &\nresearch organisations", "Researchers"))%>%
+  #change Social, political, and economic context to Context
+  mutate(factors_label = str_replace_all(factors_label, "Social, political,& economic context", "Context"))%>%
+  #select top three factors per category, but exclude the "Characteristics of other stakeholders" category
+  filter(category!="Characteristics of other stakeholders")%>%
+  group_by(category)%>%
+  slice_max(order_by = perc_mentions,n=3,with_ties = FALSE)%>%
+  ungroup()%>%
+  mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
+  ggplot(aes(y = factors_label, x = perc_mentions,fill=category)) +
+  geom_bar(stat="identity",alpha=0.8)+
+  labs(y = "", x = "Pecentage of studies mentioning factor") +
+  theme_cowplot()+
+  scale_y_reordered()+
+  scale_x_continuous(limits=c(0,50))+
+  theme(legend.position="none",
+        strip.text.x = element_text(size=10),
+        legend.text=element_text(size=8),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=10))+
+  scale_fill_manual("",values = c("#4B2991","#C0369D","#FA7876","#EDD9A3"))+
+  facet_rep_wrap(~category,ncol=2,scales="free_y")+
+  guides(fill=guide_legend(nrow=4,byrow=TRUE))
+
+
+ggsave("figures/figure_3_for_abstract.png",
+       width=185,
+       height=120,
+       units="mm",
+       dpi=300)
+
+mentions_factors_categories
+
+
+#produce a new version of the plot for the graphical abstract that includes the top 3 factors per category, but excludes the "Characteristics of other stakeholders" category
+mentions_factors_categories%>%
+#change Scientist-actor to Relationships
+  mutate(factors_label = str_replace_all(factors_label, "Scientist-actor", "Relationships"))%>%
+  slice_max(order_by = perc_mentions,n=3,with_ties = FALSE)%>%
+  ungroup()%>%
+  mutate(factors_label = reorder_within(factors_label, perc_mentions, category)) %>%
+  ggplot(aes(y = factors_label, x = perc_mentions)) +
+  geom_bar(stat="identity",alpha=0.8,fill="#185e91")+
+  labs(y = "", x = "") +
+  theme_cowplot()+
+  scale_y_reordered()+
+  scale_x_continuous(limits=c(0,50))+
+  theme(axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        axis.title = element_blank(),
+        axis.text.y=element_text(size=18,margin = margin(0,-10,0,0)),
+        axis.line = element_blank())
+
+ggsave("figures/figure_3_for_abstract_mk2.png",
+       width=185,
+       height=60,
+       units="mm",
+       dpi=300)
 
 ###################################################
 #figure 4 - Changes in factors studied over time###
