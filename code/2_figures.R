@@ -85,6 +85,13 @@ ggsave("figures/figure_1_study_context.png",
        units="cm",
        dpi=300)
 
+ggsave("figures/figure_1_study_context.pdf",
+       plot=map_biome_threat,
+       width=20,
+       height=15,
+       units="cm",
+       dpi=600)
+
 
 #################################################################
 #Figure 2 - Actors and organisations#############################
@@ -162,6 +169,12 @@ ggsave("figures/figure_2_actors_organisations.png",
        height=12,
        units="cm",
        dpi=300)
+
+ggsave("figures/figure_2_actors_organisations.pdf",
+       width=20,
+       height=12,
+       units="cm",
+       dpi=600)
 
 
 ########################################################################
@@ -254,6 +267,13 @@ ggsave("figures/figure_3_factors_coloured.png",
        units="cm",
        dpi=300)
 
+ggsave("figures/figure_3_factors_coloured.pdf",
+       combined_factor_plot_with_axes,
+       width=20,
+       height=14,
+       units="cm",
+       dpi=600)
+
 ###################################################
 #figure 4 - Changes in factors studied over time###
 ###################################################
@@ -281,6 +301,12 @@ ggsave("figures/figure_4_factors_over_time.png",
        height=12,
        units="cm",
        dpi=300)
+
+ggsave("figures/figure_4_factors_over_time.pdf",
+       width=16,
+       height=12,
+       units="cm",
+       dpi=600)
 
 
 
